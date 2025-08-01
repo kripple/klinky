@@ -1,0 +1,10 @@
+[dev]
+  autoLaunch = false
+
+[build]
+  command = ""
+  publish = "netlify/edge-functions"
+
+[[edge_functions]]
+  path = "/"
+  function = "handler"
