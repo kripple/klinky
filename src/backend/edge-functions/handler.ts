@@ -1,37 +1,40 @@
-import { handleRoutes } from '@/backend/routes';
-import { getDb, getHeaders, getOptionsHeaders } from '@/backend/utils';
+// import { neon } from '@neondatabase/serverless';
+// import { drizzle } from 'drizzle-orm/neon-http';
+import type { Context } from '@netlify/edge-functions';
+import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 
-export default async function handler(request: Request) {
-  try {
-    const allowedOrigins = Netlify.env.get('VITE_APP_URL');
-    const connectionString = Netlify.env.get('DATABASE_URL');
+const allowedOrigins = Netlify.env.get('VITE_FRONTEND_URL');
+const connectionString = Netlify.env.get('DATABASE_URL');
+if (!allowedOrigins || !connectionString) throw Error('missing netlify env');
 
-    if (!allowedOrigins) throw Error('missing VITE_APP_URL');
-    if (!connectionString) throw Error('missing DATABASE_URL');
+// const sql = neon(connectionString);
+// const db = drizzle({ client: sql });
+const hono = new Hono();
 
-    if (request.method === 'OPTIONS') {
-      return new Response(null, {
-        status: 204,
-        headers: getOptionsHeaders(allowedOrigins),
-      });
-    }
+hono.use(
+  '/*',
+  cors({
+    origin: allowedOrigins,
+    allowMethods: ['GET', 'POST', 'OPTIONS'],
+  }),
+);
 
-    const db = getDb(connectionString);
-    const data = handleRoutes(db);
+// hono.get('/user/:id', async ({ req, json }) => {
+//   const id = req.param('id');
+//   const user = await db.getUserById(id);
+//   return json(user);
+// });
 
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: getHeaders(allowedOrigins),
-    });
-  } catch (error) {
-    console.error('Unexpected handler error', error);
+// hono.post('/user', async ({ req, json }) => {
+//   const body = await req.json();
+//   const newUser = await db.createUser(body);
+//   return json(newUser, 201);
+// });
 
-    const allowedOrigins = Netlify.env.get('VITE_APP_URL');
-    if (!allowedOrigins) console.warn('missing VITE_APP_URL');
-
-    return new Response('Internal Server Error', {
-      status: 500,
-      headers: getHeaders(allowedOrigins || ''),
-    });
-  }
-}
+export default async (
+  request: Request,
+  context: Context,
+): Promise<Response> => {
+  return hono.fetch(request, context);
+};

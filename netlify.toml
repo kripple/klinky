@@ -1,10 +1,11 @@
 [dev]
   autoLaunch = false
+  framework = "#static"
 
 [build]
   command = ""
   publish = "netlify/edge-functions"
 
 [[edge_functions]]
-  path = "/"
+  path = "/*"
   function = "handler"

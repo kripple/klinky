@@ -5,9 +5,10 @@ interface ImportMetaEnv {
   readonly PROD: string;
   readonly DEV: string;
   readonly SSR: string;
+
   // everything else requires VITE_ prefix to prevent exposure of server vars in the browser
-  readonly VITE_API_URL: string;
-  readonly VITE_APP_URL: string;
+  readonly VITE_BACKEND_URL: string;
+  readonly VITE_FRONTEND_URL: string;
 }
 
 interface ImportMeta {
