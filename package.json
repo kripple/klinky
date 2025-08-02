@@ -28,6 +28,7 @@
     "@neondatabase/serverless": "^1.0.1",
     "@netlify/edge-functions": "^2.15.4",
     "drizzle-orm": "^0.44.2",
+    "nanoid": "^5.1.5",
     "pg": "^8.16.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
