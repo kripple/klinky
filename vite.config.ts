@@ -4,7 +4,6 @@ import react from '@vitejs/plugin-react';
 // import { visualizer } from 'rollup-plugin-visualizer';
 import { type PluginOption, defineConfig } from 'vite';
 
-const outDir = 'docs' as const;
 const plugins: PluginOption[] = [react()];
 
 // visualizer must be last
@@ -12,12 +11,11 @@ const plugins: PluginOption[] = [react()];
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/klinky/',
+  base: '/',
   build: {
     chunkSizeWarningLimit: 200,
     copyPublicDir: true,
     emptyOutDir: true,
-    outDir,
   },
   clearScreen: false,
   plugins,

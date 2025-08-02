@@ -1,8 +1,10 @@
 import { defineConfig } from 'drizzle-kit';
 
+const db = 'src/backend/database' as const;
+
 export default defineConfig({
-  out: 'src/backend/db/migrations',
-  schema: 'src/backend/db/schema.ts',
+  out: `${db}/migrations`,
+  schema: `${db}/schema.ts`,
   dialect: 'postgresql',
   dbCredentials: {
     url: process.env.DATABASE_URL!,
