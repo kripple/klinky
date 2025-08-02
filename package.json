@@ -9,20 +9,23 @@
   "author": "Kelly Ripple",
   "type": "module",
   "scripts": {
-    "start": "npm run api:start",
+    "start": "npm run be:start",
     "lint": "eslint . && stylelint '**/*.css' && prettier --check .",
     "test": "playwright test --config config/playwright.config.ts",
-    "build": "npm run app:build && npm run api:build",
-    "app:start": "vite",
-    "app:build": "tsc -p tsconfig.app.json && vite build",
-    "app:preview": "vite preview",
+    "build": "npm run fe:build && npm run be:build",
+
+    "fe:start": "vite",
+    "fe:build": "tsc -p tsconfig.fe.json && vite build",
+    "fe:preview": "vite preview",
+
     "db:generate": "drizzle-kit generate --config config/drizzle.config.ts",
     "db:migrate": "dotenvx run -f .env.development -- npm run db:deploy",
     "db:deploy": "drizzle-kit migrate --config config/drizzle.config.ts",
-    "api:login": "netlify login",
-    "api:start": "dotenvx run -f .env.development -- netlify dev",
-    "api:build": "rm -rf netlify/edge-functions && tsc -p tsconfig.api.json && vite build --config vite.api-config.ts",
-    "api:deploy": "netlify env:import .env && netlify deploy --prod"
+
+    "be:login": "netlify login",
+    "be:start": "dotenvx run -f .env.development -- netlify dev",
+    "be:build": "rm -rf netlify/edge-functions && tsc -p tsconfig.be.json && vite build --config vite.be-config.ts",
+    "be:deploy": "netlify env:import .env && netlify deploy --prod"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
