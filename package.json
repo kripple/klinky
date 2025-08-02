@@ -13,15 +13,12 @@
     "lint": "eslint . && stylelint '**/*.css' && prettier --check .",
     "test": "playwright test --config config/playwright.config.ts",
     "build": "npm run fe:build && npm run be:build",
-
     "fe:start": "vite",
     "fe:build": "tsc -p tsconfig.fe.json && vite build",
     "fe:preview": "vite preview",
-
     "db:generate": "drizzle-kit generate --config config/drizzle.config.ts",
     "db:migrate": "dotenvx run -f .env.development -- npm run db:deploy",
     "db:deploy": "drizzle-kit migrate --config config/drizzle.config.ts",
-
     "be:login": "netlify login",
     "be:start": "dotenvx run -f .env.development -- netlify dev",
     "be:build": "rm -rf netlify/edge-functions && tsc -p tsconfig.be.json && vite build --config vite.be-config.ts",
