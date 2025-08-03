@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const outDir = 'netlify/edge-functions' as const;
-const entry = 'src/backend/edge-functions/handler.ts';
+const entry = 'src/backend/app.ts';
 
 export default defineConfig({
   build: {
