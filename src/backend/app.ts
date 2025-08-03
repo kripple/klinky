@@ -39,9 +39,12 @@ app.onError((error, c) => {
       ? (error.message as keyof typeof HttpStatusCodes)
       : HttpStatus['500 Internal Server Error'];
 
-  if (!(error.message in HttpStatusCodes)) {
+  if (error.message in HttpStatusCodes) {
+    console.error(error);
+  } else {
     console.error('Unhandled error: ', error);
   }
+  
   return c.json({ error: errorMessage }, HttpStatusCodes[errorMessage]);
 });
 

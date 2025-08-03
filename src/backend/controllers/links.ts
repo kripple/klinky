@@ -51,8 +51,12 @@ function hasValidAlias<T extends object>(obj: T): obj is T & { alias: string } {
 }
 
 export const index = async (userUuid?: string) => {
-  if (userUuid === undefined || !validator.validate(userUuid))
-    throw Error(HttpStatus['400 Bad Request']);
+  if (userUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing user id' });
+  if (!validator.validate(userUuid))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: `invalid user id '${userUuid}'`,
+    });
 
   const user = await getUserByUuid(userUuid);
   if (!user) throw Error(HttpStatus['404 Not Found']);
@@ -67,21 +71,23 @@ export const show = async ({
   userUuid?: string;
   linkUuid?: string;
 }) => {
-  if (
-    userUuid === undefined ||
-    !validator.validate(userUuid) ||
-    linkUuid === undefined
-  )
-    throw Error(HttpStatus['400 Bad Request']);
+  if (userUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing user id' });
+  if (!validator.validate(userUuid))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: `invalid user id '${userUuid}'`,
+    });
+  if (linkUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing link id' });
 
   // it's important we use the same error in case someone is trying to view another user's links
   const errorMessage = HttpStatus['500 Internal Server Error'];
 
   const user = await getUserByUuid(userUuid);
-  if (!user) throw Error(errorMessage);
+  if (!user) throw Error(errorMessage, { cause: 'missing user' });
 
   const link = await getLinkById({ userId: user.id, linkUuid });
-  if (!link) throw Error(errorMessage);
+  if (!link) throw Error(errorMessage, { cause: 'missing link' });
 
   return link;
 };
@@ -93,21 +99,34 @@ export const create = async ({
   userUuid?: string;
   data: unknown;
 }) => {
-  if (
-    userUuid === undefined ||
-    !validator.validate(userUuid) ||
-    !isObject(data) ||
-    !hasValidUserId(data) ||
-    !hasValidUrl(data)
-  )
-    throw Error(HttpStatus['400 Bad Request']);
+  if (userUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing user id' });
+  if (!validator.validate(userUuid))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: `invalid uuid '${userUuid}'`,
+    });
+  if (!isObject(data))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: 'expected data to be an object',
+    });
+  if (!hasValidUserId(data))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: `invalid user id '${(data as any).user_id}'`,
+    });
+  if (!hasValidUrl(data))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: `invalid url '${(data as any).value}'`,
+    });
 
   const user = await getUserByUuid(userUuid);
-  if (!user) throw Error(HttpStatus['404 Not Found']);
+  if (!user)
+    throw Error(HttpStatus['404 Not Found'], { cause: 'missing user' });
 
   const links = await getLinks(user.id);
   if (links.length === maxLinksPerUser)
-    throw Error(HttpStatus['403 Forbidden']);
+    throw Error(HttpStatus['403 Forbidden'], {
+      cause: 'exceeds max links per user',
+    });
 
   const { user_id, value } = data;
   const alias =
@@ -125,23 +144,31 @@ export const update = async ({
   linkUuid?: string;
   data: unknown;
 }) => {
-  if (
-    userUuid === undefined ||
-    !validator.validate(userUuid) ||
-    linkUuid === undefined ||
-    !isObject(data) ||
-    !hasValidAlias(data)
-  )
-    throw Error(HttpStatus['400 Bad Request']);
+  if (userUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing user id' });
+  if (!validator.validate(userUuid))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: `invalid user id '${userUuid}'`,
+    });
+  if (linkUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing link id' });
+  if (!isObject(data))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: 'expected data to be an object',
+    });
+  if (!hasValidAlias(data))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: 'invalid alias',
+    });
 
   // it's important we use the same error in case someone is trying to modify another user's links
   const errorMessage = HttpStatus['500 Internal Server Error'];
 
   const user = await getUserByUuid(userUuid);
-  if (!user) throw Error(errorMessage);
+  if (!user) throw Error(errorMessage, { cause: 'missing user' });
 
   const link = await updateLink({ userId: user.id, linkUuid, data });
-  if (!link) throw Error(errorMessage);
+  if (!link) throw Error(errorMessage, { cause: 'missing link' });
 
   return link;
 };
@@ -153,12 +180,14 @@ export const destroy = async ({
   userUuid?: string;
   linkUuid?: string;
 }) => {
-  if (
-    userUuid === undefined ||
-    !validator.validate(userUuid) ||
-    linkUuid === undefined
-  )
-    throw Error(HttpStatus['400 Bad Request']);
+  if (userUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing user id' });
+  if (!validator.validate(userUuid))
+    throw Error(HttpStatus['400 Bad Request'], {
+      cause: `invalid user id '${userUuid}'`,
+    });
+  if (linkUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing link id' });
 
   // it's important we return the same response in case someone is trying to delete another user's links
   const emptyPromise = Promise.resolve();
@@ -173,10 +202,12 @@ export const destroy = async ({
 };
 
 export const unshorten = async (alias?: string) => {
-  if (alias === undefined) throw Error(HttpStatus['400 Bad Request']);
+  if (alias === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing alias' });
 
   const link = await getLinkByAlias(alias);
-  if (!link) throw Error(HttpStatus['404 Not Found']);
+  if (!link)
+    throw Error(HttpStatus['404 Not Found'], { cause: 'missing link' });
 
   return link.value;
 };

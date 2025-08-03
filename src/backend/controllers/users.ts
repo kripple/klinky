@@ -13,8 +13,10 @@ export const create = async () => {
 };
 
 export const show = async (userUuid?: string) => {
-  if (userUuid === undefined || !validator.validate(userUuid))
-    throw Error(HttpStatus['400 Bad Request']);
+  if (userUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing user id' });
+  if (!validator.validate(userUuid))
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'invalid user id' });
 
   const user = await getUserByUuid(userUuid);
   if (!user) throw Error('Not Found');
@@ -23,8 +25,10 @@ export const show = async (userUuid?: string) => {
 };
 
 export const destroy = async (userUuid?: string) => {
-  if (userUuid === undefined || !validator.validate(userUuid))
-    throw Error(HttpStatus['400 Bad Request']);
+  if (userUuid === undefined)
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'missing user id' });
+  if (!validator.validate(userUuid))
+    throw Error(HttpStatus['400 Bad Request'], { cause: 'invalid user id' });
 
   await deleteUserByUuid(userUuid);
 };
