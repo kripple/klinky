@@ -17,7 +17,7 @@ export default defineConfig({
     emptyOutDir: false,
     lib: {
       entry: resolve(__dirname, entry),
-      fileName: '[name]',
+      fileName: 'handler',
       formats: ['es'],
       name: 'handler',
     },
