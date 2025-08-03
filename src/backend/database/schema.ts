@@ -44,3 +44,4 @@ export const Link = pgTable(
   ],
 );
 export type Link = typeof Link.$inferSelect;
+export type NewLink = typeof Link.$inferInsert;

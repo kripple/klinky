@@ -8,11 +8,11 @@ export const createUser = async (): Promise<User> => {
   return user;
 };
 
-export const getUserById = async (uuid: string): Promise<User | undefined> => {
+export const getUserByUuid = async (uuid: string): Promise<User | undefined> => {
   const [user] = await db.select().from(User).where(eq(User.uuid, uuid));
   return user;
 };
 
-export const deleteUserById = async (uuid: string): Promise<void> => {
+export const deleteUserByUuid = async (uuid: string): Promise<void> => {
   await db.delete(User).where(eq(User.uuid, uuid));
 };
