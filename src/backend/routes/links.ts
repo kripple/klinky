@@ -1,36 +1,44 @@
 import { Hono } from 'hono';
 
+import {
+  create,
+  destroy,
+  index,
+  show,
+  update,
+} from '@/backend/controllers/links';
+
 const links = new Hono();
 
 links
   .get('/', async (c) => {
-    const uuid = c.req.param('uuid');
-    const data = await controller.index(uuid);
+    const userUuid = c.req.param('user_uuid');
+    const data = await index(userUuid);
     return c.json(data);
   })
   .post('/', async (c) => {
-    const uuid = c.req.param('uuid');
+    const userUuid = c.req.param('user_uuid');
     const body = await c.req.json();
-    const data = await controller.create(uuid, body);
+    const data = await create({ userUuid, data: body });
     return c.json(data, 201);
   })
-  .get('/:id', async (c) => {
-    const uuid = c.req.param('uuid');
-    const id = Number(c.req.param('id'));
-    const data = await controller.show(uuid, id);
+  .get('/:link_uuid', async (c) => {
+    const userUuid = c.req.param('user_uuid');
+    const linkUuid = c.req.param('link_uuid');
+    const data = await show({ userUuid, linkUuid });
     return c.json(data);
   })
-  .patch('/:id', async (c) => {
-    const uuid = c.req.param('uuid');
-    const id = Number(c.req.param('id'));
+  .patch('/:link_uuid', async (c) => {
+    const userUuid = c.req.param('user_uuid');
+    const linkUuid = c.req.param('link_uuid');
     const body = await c.req.json();
-    const data = await controller.update(uuid, id, body);
+    const data = await update({ userUuid, linkUuid, data: body });
     return c.json(data);
   })
-  .delete('/:id', async (c) => {
-    const uuid = c.req.param('uuid');
-    const id = Number(c.req.param('id'));
-    await controller.destroy(uuid, id);
+  .delete('/:link_uuid', async (c) => {
+    const userUuid = c.req.param('user_uuid');
+    const linkUuid = c.req.param('link_uuid');
+    await destroy({ userUuid, linkUuid });
     return c.body(null, 204);
   });
 

@@ -9,14 +9,14 @@ users
     const user = await create();
     return c.json(user, 201);
   })
-  .get('/:uuid', async (c) => {
-    const uuid = c.req.param('uuid');
-    const user = await show(uuid);
+  .get('/:user_uuid', async (c) => {
+    const userUuid = c.req.param('user_uuid');
+    const user = await show(userUuid);
     return c.json(user);
   })
-  .delete('/:uuid', async (c) => {
-    const uuid = c.req.param('uuid');
-    await destroy(uuid);
+  .delete('/:user_uuid', async (c) => {
+    const userUuid = c.req.param('user_uuid');
+    await destroy(userUuid);
     return c.json(204);
   });
 

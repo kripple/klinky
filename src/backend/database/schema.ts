@@ -18,7 +18,7 @@ export const User = pgTable(
     created_at: timestamp(options).defaultNow().notNull(),
   },
   (table) => [
-    uniqueIndex('uuid_idx').on(table.uuid),
+    uniqueIndex('user_uuid_idx').on(table.uuid),
     index('user_created_at_idx').on(table.created_at),
   ],
 );
@@ -28,6 +28,7 @@ export const Link = pgTable(
   'links',
   {
     id: integer().primaryKey().generatedAlwaysAsIdentity(),
+    uuid: uuid().defaultRandom().unique().notNull(),
     user_id: integer()
       .notNull()
       .references(() => User.id),
@@ -37,6 +38,7 @@ export const Link = pgTable(
     updated_at: timestamp(options).defaultNow().notNull(),
   },
   (table) => [
+    uniqueIndex('link_uuid_idx').on(table.uuid),
     index('link_value_idx').on(table.value),
     uniqueIndex('link_alias_idx').on(table.alias),
     index('link_created_at_idx').on(table.created_at),
