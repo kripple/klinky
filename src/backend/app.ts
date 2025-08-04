@@ -31,7 +31,7 @@ app.route('/users/:user_uuid/links', links);
 app.get('/:alias', async (c) => {
   const alias = c.req.param('alias');
   const url = await unshorten(alias);
-  return c.redirect(url);
+  return c.redirect(url || '/');
 });
 
 app.onError((error, c) => {

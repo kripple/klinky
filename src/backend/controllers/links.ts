@@ -205,8 +205,6 @@ export const unshorten = async (alias?: string) => {
     throw Error(HttpStatus['400 Bad Request'], { cause: 'missing alias' });
 
   const link = await getLinkByAlias(alias);
-  if (!link)
-    throw Error(HttpStatus['404 Not Found'], { cause: 'missing link' });
 
-  return link.value;
+  return link?.value;
 };

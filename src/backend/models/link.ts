@@ -28,7 +28,9 @@ export const getLinkById = async ({
 };
 
 export const getLinkByAlias = async (alias: string) => {
-  const [link] = await db.select().from(Link).where(eq(Link.alias, alias));
+  const link = (
+    await db.select().from(Link).where(eq(Link.alias, alias))
+  ).pop();
   return link;
 };
 

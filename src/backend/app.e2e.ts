@@ -48,23 +48,19 @@ async function expectRedirect({
   description,
   path,
   request,
-  goTo,
-  expectedStatus = 302,
+  goTo = '/',
 }: {
   description: string;
   path: string;
   request: APIRequestContext;
-  goTo: string;
-  expectedStatus?: number;
+  goTo?: string;
 }) {
   const url = `${baseUrl}/${path}`;
   const response = await request.get(url, {
     maxRedirects: 0, // don't actually go to example.com
   });
-  expect(response.status(), description).toBe(expectedStatus);
-  if (expectedStatus === 302) {
-    expect(response.headers()['location'], description).toEqual(goTo);
-  }
+  expect(response.status(), description).toBe(302);
+  expect(response.headers()['location'], description).toEqual(goTo);
 }
 
 test.describe('app', () => {
@@ -168,8 +164,6 @@ test.describe('app', () => {
       request,
       path: customAlias,
       description: 'verify original link no longer redirects',
-      goTo: value,
-      expectedStatus: 404,
     });
 
     await expectRedirect({
@@ -191,8 +185,6 @@ test.describe('app', () => {
       request,
       path: link.alias,
       description: 'verify link was deleted',
-      goTo: value,
-      expectedStatus: 404,
     });
 
     await expectResponse({
@@ -207,8 +199,6 @@ test.describe('app', () => {
       request,
       path: defaultLink.alias,
       description: 'deleting user also deletes user links',
-      goTo: value,
-      expectedStatus: 404,
     });
   });
 });
