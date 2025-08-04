@@ -19,3 +19,17 @@ The FE logic must include logic developed by the Chingu that operates on the dat
 It must implement a front-end application that accesses a back-end server that implements an API of your own design, optionally using a database such as a NoSQL DBMS like MongoDB or a SQL DBMS like PostgreSQL.
 
 Your backend must include CRUD (if using a database) or POST/READ/UPDATE/DELETE (for APIs).
+
+## Routes
+
+POST   /users
+GET    /users/:uuid
+DELETE /users/:uuid
+
+GET    /users/:uuid/links
+POST   /users/:uuid/links
+GET    /users/:uuid/links/:link_id
+PATCH  /users/:uuid/links/:link_id
+DELETE /users/:uuid/links/:link_id
+
+GET    /:alias
