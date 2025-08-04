@@ -5,7 +5,8 @@ import * as validator from 'uuid';
 type Actual = ReturnType<typeof expect>;
 const baseUrl = process.env.VITE_BACKEND_URL;
 
-export async function expectResponse({
+async function expectResponse({
+  description,
   expectProps,
   method,
   request,
@@ -13,6 +14,7 @@ export async function expectResponse({
   data,
   expectedStatus = 200,
 }: {
+  description: string;
   expectProps?: { [key: string]: (e: Actual) => void };
   method: 'get' | 'post' | 'patch' | 'delete';
   request: APIRequestContext;
@@ -23,15 +25,15 @@ export async function expectResponse({
   const url = `${baseUrl}${path}`;
   const response = await request[method](url, data ? { data } : undefined);
 
-  expect(response.status()).toBe(expectedStatus);
+  expect(response.status(), description).toBe(expectedStatus);
 
   if (expectedStatus !== 204) {
     const body = await response.json();
-    expect(body).toBeTruthy();
+    expect(body, description).toBeTruthy();
 
     if (expectProps) {
       for (const [key, callbackFn] of Object.entries(expectProps)) {
-        expect(body).toHaveProperty(key);
+        expect(body, `${description} - .${key}`).toHaveProperty(key);
         callbackFn(body[key]);
       }
     }
@@ -42,10 +44,38 @@ export async function expectResponse({
   return null;
 }
 
+async function expectRedirect({
+  description,
+  path,
+  request,
+  goTo,
+  expectedStatus = 302,
+}: {
+  description: string;
+  path: string;
+  request: APIRequestContext;
+  goTo: string;
+  expectedStatus?: number;
+}) {
+  const url = `${baseUrl}/${path}`;
+  const response = await request.get(url, {
+    maxRedirects: 0, // don't actually go to example.com
+  });
+  expect(response.status(), description).toBe(expectedStatus);
+  if (expectedStatus === 302) {
+    expect(response.headers()['location'], description).toEqual(goTo);
+  }
+}
+
 test.describe('app', () => {
   test('happy path', async ({ request }) => {
-    // POST /users
+    const value = 'https://example.com';
+    const customAlias = nanoid();
+    const newCustomAlias = nanoid();
+    expect(customAlias).not.toEqual(newCustomAlias);
+
     const user = await expectResponse({
+      description: 'POST /users',
       expectProps: {
         uuid: (prop) => expect(validator.validate(prop)).toBe(true),
         created_at: (prop) => expect(prop).toBeDefined(),
@@ -56,8 +86,8 @@ test.describe('app', () => {
       expectedStatus: 201,
     });
 
-    // GET /users/:uuid
     await expectResponse({
+      description: 'GET /users/:user_uuid',
       expectProps: {
         id: (prop) => expect(prop).toEqual(user.id),
         uuid: (prop) => expect(prop).toEqual(user.uuid),
@@ -68,10 +98,8 @@ test.describe('app', () => {
       path: `/users/${user.uuid}`,
     });
 
-    // POST /users/:uuid/links
-    const customAlias = nanoid();
-    const value = 'https://example.com';
     const defaultLink = await expectResponse({
+      description: 'POST /users/:user_uuid/links',
       expectProps: {
         value: (prop) => expect(prop).toEqual(value),
       },
@@ -81,7 +109,9 @@ test.describe('app', () => {
       data: { value },
       expectedStatus: 201,
     });
+
     const link = await expectResponse({
+      description: 'POST /users/:user_uuid/links (custom alias)',
       expectProps: {
         value: (prop) => expect(prop).toEqual(value),
         alias: (prop) => expect(prop).toEqual(customAlias),
@@ -92,9 +122,10 @@ test.describe('app', () => {
       data: { value, alias: customAlias },
       expectedStatus: 201,
     });
+    expect(link.created_at).toEqual(link.updated_at);
 
-    // GET /users/:uuid/links
     await expectResponse({
+      description: 'GET /users/:user_uuid/links',
       expectProps: {
         length: (prop) => expect(prop).toBeGreaterThan(0),
       },
@@ -103,8 +134,8 @@ test.describe('app', () => {
       path: `/users/${user.uuid}/links`,
     });
 
-    // GET /users/:uuid/links/:link_id
     await expectResponse({
+      description: 'GET /users/:user_uuid/links/:link_uuid',
       expectProps: {
         alias: (prop) => expect(prop).toEqual(customAlias),
         value: (prop) => expect(prop).toEqual(value),
@@ -114,11 +145,18 @@ test.describe('app', () => {
       path: `/users/${user.uuid}/links/${link.uuid}`,
     });
 
-    // PATCH /users/:uuid/links/:link_id
-    const newCustomAlias = nanoid();
+    await expectRedirect({
+      request,
+      path: customAlias,
+      description: 'GET /:alias',
+      goTo: value,
+    });
+
     await expectResponse({
+      description: 'PATCH /users/:user_uuid/links/:link_uuid',
       expectProps: {
         alias: (prop) => expect(prop).toEqual(newCustomAlias),
+        updated_at: (prop) => expect(prop).not.toEqual(link.created_at),
       },
       method: 'patch',
       request,
@@ -126,36 +164,51 @@ test.describe('app', () => {
       data: { alias: newCustomAlias },
     });
 
-    // GET /:alias (redirect)
-    const aliasResponse = await request.get(`${baseUrl}/${newCustomAlias}`, {
-      maxRedirects: 0,
+    await expectRedirect({
+      request,
+      path: customAlias,
+      description: 'verify original link no longer redirects',
+      goTo: value,
+      expectedStatus: 404,
     });
-    expect(aliasResponse.status()).toBe(302);
-    expect(aliasResponse.headers()['location']).toEqual(value);
 
-    // DELETE /users/:uuid/links/:link_id
+    await expectRedirect({
+      request,
+      path: newCustomAlias,
+      description: 'verify new link is active',
+      goTo: value,
+    });
+
     await expectResponse({
+      description: 'DELETE /users/:user_uuid/links/:link_uuid',
       method: 'delete',
       request,
       path: `/users/${user.uuid}/links/${link.uuid}`,
       expectedStatus: 204,
     });
 
-    // DELETE /users/:uuid
+    await expectRedirect({
+      request,
+      path: link.alias,
+      description: 'verify link was deleted',
+      goTo: value,
+      expectedStatus: 404,
+    });
+
     await expectResponse({
+      description: 'DELETE /users/:user_uuid',
       method: 'delete',
       request,
       path: `/users/${user.uuid}`,
       expectedStatus: 204,
     });
 
-    // deleting the user also deletes the user's links
-    const afterDeleteResponse = await request.get(
-      `${baseUrl}/${defaultLink.alias}`,
-      {
-        maxRedirects: 0,
-      },
-    );
-    expect(afterDeleteResponse.status()).toBe(404);
+    await expectRedirect({
+      request,
+      path: defaultLink.alias,
+      description: 'deleting user also deletes user links',
+      goTo: value,
+      expectedStatus: 404,
+    });
   });
 });
