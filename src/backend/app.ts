@@ -1,6 +1,7 @@
 import type { Context } from '@netlify/edge-functions';
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { logger } from 'hono/logger';
 import { requestId } from 'hono/request-id';
 
 import { unshorten } from '@/backend/controllers/links';
@@ -13,8 +14,8 @@ if (!allowedOrigins) throw Error('missing netlify env');
 
 const app = new Hono();
 
+app.use(logger());
 app.use('*', requestId());
-
 app.use(
   '*',
   cors({
@@ -44,7 +45,7 @@ app.onError((error, c) => {
   } else {
     console.error('Unhandled error: ', error);
   }
-  
+
   return c.json({ error: errorMessage }, HttpStatusCodes[errorMessage]);
 });
 
