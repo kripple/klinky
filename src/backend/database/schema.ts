@@ -31,7 +31,7 @@ export const Link = pgTable(
     uuid: uuid().defaultRandom().unique().notNull(),
     user_id: integer()
       .notNull()
-      .references(() => User.id),
+      .references(() => User.id, { onDelete: 'cascade' }),
     value: varchar().notNull(),
     alias: varchar().notNull(),
     created_at: timestamp(options).defaultNow().notNull(),
