@@ -17,7 +17,7 @@ users
   .delete('/:user_uuid', async (c) => {
     const userUuid = c.req.param('user_uuid');
     await destroy(userUuid);
-    return c.json(204);
+    return c.body(null, 204);
   });
 
 export { users };
