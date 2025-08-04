@@ -1,7 +1,9 @@
 import { type APIRequestContext, expect, test } from '@playwright/test';
+import { nanoid } from 'nanoid';
 import * as validator from 'uuid';
 
 type Actual = ReturnType<typeof expect>;
+const baseUrl = process.env.VITE_BACKEND_URL;
 
 export async function expectResponse({
   expectProps,
@@ -18,7 +20,7 @@ export async function expectResponse({
   data?: Record<string, any>;
   expectedStatus?: number;
 }) {
-  const url = `${process.env.VITE_BACKEND_URL}${path}`;
+  const url = `${baseUrl}${path}`;
   const response = await request[method](url, data ? { data } : undefined);
 
   expect(response.status()).toBe(expectedStatus);
@@ -40,24 +42,7 @@ export async function expectResponse({
   return null;
 }
 
-// POST   /users
-// GET    /users/:uuid
-// DELETE /users/:uuid
-
-// GET    /users/:uuid/links
-// POST   /users/:uuid/links
-// GET    /users/:uuid/links/:link_id
-// PATCH  /users/:uuid/links/:link_id
-// DELETE /users/:uuid/links/:link_id
-
-// GET    /:alias
-
 test.describe('app', () => {
-  // let uuid: string;
-  // let linkId: string;
-  // const alias = 'ex123';
-  // const value = 'https://example.com';
-
   test('happy path', async ({ request }) => {
     // POST /users
     const user = await expectResponse({
@@ -84,72 +69,93 @@ test.describe('app', () => {
     });
 
     // POST /users/:uuid/links
-    // const link = await expectResponse({
-    //   expectProps: {
-    //     // alias: (e) => e.toEqual(alias),
-    //     value: (e) => e.toEqual(value),
-    //   },
-    //   method: 'post',
-    //   request,
-    //   path: `/users/${uuid}/links`,
-    //   data: { value },
-    //   expectedStatus: 201,
-    // });
-    // linkId = link.uuid;
+    const customAlias = nanoid();
+    const value = 'https://example.com';
+    const defaultLink = await expectResponse({
+      expectProps: {
+        value: (prop) => expect(prop).toEqual(value),
+      },
+      method: 'post',
+      request,
+      path: `/users/${user.uuid}/links`,
+      data: { value },
+      expectedStatus: 201,
+    });
+    const link = await expectResponse({
+      expectProps: {
+        value: (prop) => expect(prop).toEqual(value),
+        alias: (prop) => expect(prop).toEqual(customAlias),
+      },
+      method: 'post',
+      request,
+      path: `/users/${user.uuid}/links`,
+      data: { value, alias: customAlias },
+      expectedStatus: 201,
+    });
 
     // GET /users/:uuid/links
-    // await expectResponse({
-    //   expectProps: {
-    //     length: (e) => e.toBeGreaterThan(0),
-    //   },
-    //   method: 'get',
-    //   request,
-    //   path: `/users/${uuid}/links`,
-    // });
+    await expectResponse({
+      expectProps: {
+        length: (prop) => expect(prop).toBeGreaterThan(0),
+      },
+      method: 'get',
+      request,
+      path: `/users/${user.uuid}/links`,
+    });
 
     // GET /users/:uuid/links/:link_id
-    // await expectResponse({
-    //   expectProps: {
-    //     alias: (e) => e.toEqual(alias),
-    //     value: (e) => e.toEqual(value),
-    //   },
-    //   method: 'get',
-    //   request,
-    //   path: `/users/${uuid}/links/${linkId}`,
-    // });
+    await expectResponse({
+      expectProps: {
+        alias: (prop) => expect(prop).toEqual(customAlias),
+        value: (prop) => expect(prop).toEqual(value),
+      },
+      method: 'get',
+      request,
+      path: `/users/${user.uuid}/links/${link.uuid}`,
+    });
 
     // PATCH /users/:uuid/links/:link_id
-    // await expectResponse({
-    //   expectProps: {
-    //     alias: (e) => e.toEqual('updated'),
-    //   },
-    //   method: 'patch',
-    //   request,
-    //   path: `/users/${uuid}/links/${linkId}`,
-    //   data: { alias: 'updated' },
-    // });
+    const newCustomAlias = nanoid();
+    await expectResponse({
+      expectProps: {
+        alias: (prop) => expect(prop).toEqual(newCustomAlias),
+      },
+      method: 'patch',
+      request,
+      path: `/users/${user.uuid}/links/${link.uuid}`,
+      data: { alias: newCustomAlias },
+    });
 
     // GET /:alias (redirect)
-    // const res = await request.get(`${process.env.VITE_API_URL}/updated`, {
-    //   maxRedirects: 0,
-    // });
-    // expect(res.status()).toBe(302);
-    // expect(res.headers()['location']).toEqual(value);
+    const aliasResponse = await request.get(`${baseUrl}/${newCustomAlias}`, {
+      maxRedirects: 0,
+    });
+    expect(aliasResponse.status()).toBe(302);
+    expect(aliasResponse.headers()['location']).toEqual(value);
 
     // DELETE /users/:uuid/links/:link_id
-    // await expectResponse({
-    //   method: 'delete',
-    //   request,
-    //   path: `/users/${uuid}/links/${linkId}`,
-    //   expectedStatus: 204,
-    // });
+    await expectResponse({
+      method: 'delete',
+      request,
+      path: `/users/${user.uuid}/links/${link.uuid}`,
+      expectedStatus: 204,
+    });
 
     // DELETE /users/:uuid
-    // await expectResponse({
-    //   method: 'delete',
-    //   request,
-    //   path: `/users/${uuid}`,
-    //   expectedStatus: 204,
-    // });
+    await expectResponse({
+      method: 'delete',
+      request,
+      path: `/users/${user.uuid}`,
+      expectedStatus: 204,
+    });
+
+    // deleting the user also deletes the user's links
+    const afterDeleteResponse = await request.get(
+      `${baseUrl}/${defaultLink.alias}`,
+      {
+        maxRedirects: 0,
+      },
+    );
+    expect(afterDeleteResponse.status()).toBe(404);
   });
 });
