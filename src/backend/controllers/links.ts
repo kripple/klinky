@@ -33,12 +33,11 @@ function hasValidUrl<T extends object>(obj: T): obj is T & { value: string } {
 
 function hasValidAlias<T extends object>(obj: T): obj is T & { alias: string } {
   const reserved = [
-    'admin',
-    'login',
     'signup',
-    'api',
     'dashboard',
     'favicon.ico',
+    'site.manifest',
+    'assets',
   ];
   return (
     'alias' in obj &&
