@@ -14,18 +14,18 @@ import { getUserByUuid } from '@/backend/models/user';
 import { HttpStatus } from '@/utils/errors';
 import {
   isObject,
-  isPositiveInteger,
+  // isPositiveInteger,
   isSafePublicUrl,
 } from '@/utils/type-guards';
 
 const minLength = 6 as const;
 const maxLength = 30 as const;
 
-function hasValidUserId<T extends object>(
-  obj: T,
-): obj is T & { user_id: number } {
-  return 'user_id' in obj && isPositiveInteger(obj.user_id);
-}
+// function hasValidUserId<T extends object>(
+//   obj: T,
+// ): obj is T & { user_id: number } {
+//   return 'user_id' in obj && isPositiveInteger(obj.user_id);
+// }
 
 function hasValidUrl<T extends object>(obj: T): obj is T & { value: string } {
   return 'value' in obj && isSafePublicUrl(obj.value);
@@ -109,10 +109,10 @@ export const create = async ({
     throw Error(HttpStatus['400 Bad Request'], {
       cause: 'expected data to be an object',
     });
-  if (!hasValidUserId(data))
-    throw Error(HttpStatus['400 Bad Request'], {
-      cause: `invalid user id '${(data as any).user_id}'`,
-    });
+  // if (!hasValidUserId(data))
+  //   throw Error(HttpStatus['400 Bad Request'], {
+  //     cause: `invalid user id '${(data as any).user_id}'`,
+  //   });
   if (!hasValidUrl(data))
     throw Error(HttpStatus['400 Bad Request'], {
       cause: `invalid url '${(data as any).value}'`,
@@ -128,11 +128,11 @@ export const create = async ({
       cause: 'exceeds max links per user',
     });
 
-  const { user_id, value } = data;
+  const { value } = data;
   const alias =
     'alias' in data && hasValidAlias(data) ? data.alias : nanoid(minLength);
 
-  return createLink({ user_id, value, alias });
+  return createLink({ user_id: user.id, value, alias });
 };
 
 export const update = async ({
