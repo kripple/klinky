@@ -1,18 +1,21 @@
 import { Hono } from 'hono';
 
 import { usersController } from '@/backend/controllers/UsersController';
+import { serializeUser } from '@/backend/serializers/UserSerializer';
 
 const users = new Hono();
 
 users
   .post('/users', async (c) => {
     const user = await usersController.create();
-    return c.json(user, 201);
+    const dto = serializeUser(user);
+    return c.json(dto, 201);
   })
   .get('/users/:user_uuid', async (c) => {
     const params = c.req.param();
     const user = await usersController.show(params);
-    return c.json(user);
+    const dto = serializeUser(user);
+    return c.json(dto);
   })
   .delete('/users/:user_uuid', async (c) => {
     const params = c.req.param();
