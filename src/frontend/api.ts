@@ -6,17 +6,30 @@ export const api = createApi({
   }),
   tagTypes: ['User', 'Link'],
   endpoints: (build) => ({
-    getUser: build.query<UserDTO, string>({
+    getUser: build.query<UserDto, string>({
       query: (uuid: string) => `/users/${uuid}`,
       providesTags: ['User'],
     }),
 
-    createUser: build.query<UserDTO, void>({
+    createUser: build.query<UserDto, void>({
       query: () => ({
         url: '/users',
         method: 'POST',
       }),
       providesTags: ['User'],
     }),
+
+    deleteUser: build.mutation<UserDto, string>({
+      query: (uuid: string) => ({
+        url: `/users/${uuid}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['User'],
+    }),
+
+    // getLinks: build.query<UserDto, string>({
+    //   query: (uuid: string) => `/users/${uuid}`,
+    //   providesTags: ['User'],
+    // }),
   }),
 });
