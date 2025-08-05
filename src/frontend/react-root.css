@@ -14,6 +14,20 @@ body,
   width: 100vw;
 }
 
+html {
+  -webkit-locale: 'en';
+}
+
+body {
+  color: #475569;
+  font-family: monospace;
+}
+
 #root {
   position: relative;
+}
+
+button,
+input {
+  outline-color: #3333ff;
 }

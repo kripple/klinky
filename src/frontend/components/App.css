@@ -28,9 +28,143 @@
 }
 
 .scroll-container {
+  display: flex;
+  flex-direction: column;
   height: 100svh;
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
   width: 100svw;
+}
+
+.header {
+  align-items: center;
+  background-color: #ffffffcc;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  width: 100%;
+}
+
+.app-title {
+  font-size: 16px;
+  padding: 14px;
+}
+
+.main {
+  flex-grow: 1;
+  line-height: 1.15;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 56rem;
+  padding-bottom: 8rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 5rem;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .main {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .main {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 48px;
+  padding: 30px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+button {
+  background-color: #7c7cff;
+  border: 1px solid #7c7cff;
+  border-radius: 4px;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  line-height: 1.5rem;
+  padding: 8px 14px;
+}
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+.heading {
+  font-size: 72px;
+  font-weight: 400;
+  margin: 0;
+  margin-bottom: 32px;
+}
+
+.heading-highlight {
+  color: #8d7cff;
+  display: block;
+  font-weight: 400;
+  margin-top: 8px;
+}
+
+.subheading {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 2rem;
+  margin: 0;
+  margin-bottom: 32px;
+}
+
+.key-features-list {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+}
+
+.input-pair {
+  display: flex;
+}
+
+input {
+  border: 1px solid #c0c0ff9b;
+  border-radius: 4px;
+  display: flex;
+  font-family: monospace;
+  font-size: 16px;
+  letter-spacing: -0.8px;
+  line-height: 24px;
+  padding: 8px 16px;
+}
+
+input.readonly-prefix {
+  background-color: #e5e5ff62;
+  border-bottom-right-radius: 0;
+  border-right: transparent;
+  border-top-right-radius: 0;
+  color: #212529bf;
+  padding-right: 6px;
+  pointer-events: none;
+  text-align: right;
+  width: calc(20ch + 6px); /* https://klinky.link/ is 20 characters in length */
+}
+
+input.input-value {
+  border-bottom-left-radius: 0;
+  border-left: transparent;
+  border-top-left-radius: 0;
+  flex-grow: 1;
 }
