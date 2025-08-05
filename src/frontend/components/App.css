@@ -78,11 +78,11 @@
   }
 }
 
-.card {
+.form-card {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
-  margin-bottom: 48px;
+  margin-bottom: 24px;
   padding: 30px;
 }
 
@@ -131,8 +131,19 @@ button:not(:disabled) {
 
 .key-features-list {
   display: flex;
+  font-size: 14px;
   gap: 32px;
   justify-content: center;
+}
+
+.feature-badge {
+  align-items: center;
+  display: flex;
+  gap: 6px;
+}
+
+.feature-badge .badge {
+  transform: scale(0.5);
 }
 
 .input-pair {

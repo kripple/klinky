@@ -20,17 +20,19 @@ export function App() {
               <br />
               No tracking. No accounts. Just links.
             </h2>
-            <div className="card">
+            <div className="form-card">
               <form>
                 <div className="input-pair">
                   <input
                     className="readonly-prefix"
+                    name="link-prefix"
                     readOnly
                     tabIndex={-1}
                     value="https://"
                   ></input>
                   <input
                     className="input-value"
+                    name="link"
                     placeholder="Enter link here"
                     required
                   ></input>
@@ -38,12 +40,14 @@ export function App() {
                 <div className="input-pair">
                   <input
                     className="readonly-prefix"
+                    name="alias-prefix"
                     readOnly
                     tabIndex={-1}
                     value="https://klinky.link/"
                   ></input>
                   <input
                     className="input-value"
+                    name="alias"
                     placeholder="Customize your link (optional)"
                   ></input>
                 </div>
@@ -51,9 +55,18 @@ export function App() {
               </form>
             </div>
             <div className="key-features-list">
-              <span>Free to use</span>
-              <span>Open source</span>
-              <span>No signup required</span>
+              <div className="feature-badge">
+                <div className="badge badge-primary badge-xs"></div>
+                <span>Free to use</span>
+              </div>
+              <div className="feature-badge">
+                <div className="badge badge-secondary badge-xs"></div>
+                <span>Open source</span>
+              </div>
+              <div className="feature-badge">
+                <div className="badge badge-accent badge-xs"></div>
+                <span>No signup required</span>
+              </div>
             </div>
           </main>
         </div>
