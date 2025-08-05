@@ -8,12 +8,12 @@ export function App() {
         <div className="scroll-container">
           <header className="header">
             <div className="app-title">klinky.link</div>
-            <button>TBD</button>
+            <button>Short Links</button>
           </header>
           <main className="main">
             <h1 className="heading">
               The anti-lytics
-              <span className="heading-highlight">URL Shortener</span>
+              <span className="heading-highlight">Link Shortener</span>
             </h1>
             <h2 className="subheading">
               Privacy isn’t just a feature — it’s the point.
@@ -51,7 +51,7 @@ export function App() {
                     placeholder="Customize your link (optional)"
                   ></input>
                 </div>
-                <button type="submit">Shorten URL</button>
+                <button type="submit">Create Short Link</button>
               </form>
             </div>
             <div className="key-features-list">
