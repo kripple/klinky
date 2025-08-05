@@ -1,7 +1,4 @@
-import {
-  UserLinksController,
-  type UserParams,
-} from '@/backend/controllers/UserLinksController';
+import { UserLinksController } from '@/backend/controllers/UserLinksController';
 import { createUser, deleteUserByUuid } from '@/backend/models/user.model';
 
 class UsersController extends UserLinksController {

@@ -1,10 +1,6 @@
 import { nanoid } from 'nanoid';
 
-import {
-  type LinkParams,
-  UserLinksController,
-  type UserParams,
-} from '@/backend/controllers/UserLinksController';
+import { UserLinksController } from '@/backend/controllers/UserLinksController';
 import {
   createLink,
   deleteLink,
@@ -20,16 +16,6 @@ import {
   isSafePublicUrl,
   isValidUrlAlias,
 } from '@/validators/url';
-
-type UpdateLinkParams = UserParams & {
-  link_uuid: string;
-  alias: string;
-};
-
-type CreateLinkParams = UserParams & {
-  alias?: string;
-  value: string;
-};
 
 class LinksController extends UserLinksController {
   validate_alias(alias?: unknown): alias is string {
