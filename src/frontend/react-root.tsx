@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client';
 
 import { App } from '@/frontend/components/App';
 
+import '@/frontend/react-root.css';
+
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <App />

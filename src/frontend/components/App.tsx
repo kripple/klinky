@@ -1,5 +1,15 @@
-// import '@/app/components/App.css';
+import '@/frontend/components/App.css';
 
 export function App() {
-  return <div>Hello, World!</div>;
+  return (
+    <>
+      <div className="fixed-background"></div>
+      <div className="app-container">
+        <div className="scroll-container">
+          <header>header</header>
+          <main>main</main>
+        </div>
+      </div>
+    </>
+  );
 }
