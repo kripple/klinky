@@ -1,22 +1,22 @@
 import { Hono } from 'hono';
 
-import { create, destroy, show } from '@/backend/controllers/users';
+import { usersController } from '@/backend/controllers/UsersController';
 
 const users = new Hono();
 
 users
-  .post('/', async (c) => {
-    const user = await create();
+  .post('/users', async (c) => {
+    const user = await usersController.create();
     return c.json(user, 201);
   })
-  .get('/:user_uuid', async (c) => {
-    const userUuid = c.req.param('user_uuid');
-    const user = await show(userUuid);
+  .get('/users/:user_uuid', async (c) => {
+    const params = c.req.param();
+    const user = await usersController.show(params);
     return c.json(user);
   })
-  .delete('/:user_uuid', async (c) => {
-    const userUuid = c.req.param('user_uuid');
-    await destroy(userUuid);
+  .delete('/users/:user_uuid', async (c) => {
+    const params = c.req.param();
+    await usersController.destroy(params);
     return c.body(null, 204);
   });
 

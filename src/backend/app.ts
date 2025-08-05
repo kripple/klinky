@@ -4,7 +4,7 @@ import { cors } from 'hono/cors';
 import { logger } from 'hono/logger';
 import { requestId } from 'hono/request-id';
 
-import { unshorten } from '@/backend/controllers/links';
+import { linksController } from '@/backend/controllers/LinksController';
 import { links } from '@/backend/routes/links';
 import { users } from '@/backend/routes/users';
 import { HttpStatus, HttpStatusCodes } from '@/utils/errors';
@@ -24,13 +24,13 @@ app.use(
   }),
 );
 
-app.route('/users', users);
+app.route('/', users);
 
-app.route('/users/:user_uuid/links', links);
+app.route('/', links);
 
 app.get('/:alias', async (c) => {
-  const alias = c.req.param('alias');
-  const url = await unshorten(alias);
+  const params = c.req.param();
+  const url = await linksController.unshorten(params);
   return c.redirect(url || '/');
 });
 

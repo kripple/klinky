@@ -1,44 +1,35 @@
 import { Hono } from 'hono';
 
-import {
-  create,
-  destroy,
-  index,
-  show,
-  update,
-} from '@/backend/controllers/links';
+import { linksController } from '@/backend/controllers/LinksController';
 
 const links = new Hono();
 
 links
-  .get('/', async (c) => {
-    const userUuid = c.req.param('user_uuid');
-    const data = await index(userUuid);
+  .get('/users/:user_uuid/links', async (c) => {
+    const params = c.req.param();
+    const data = await linksController.index(params);
     return c.json(data);
   })
-  .post('/', async (c) => {
-    const userUuid = c.req.param('user_uuid');
+  .post('/users/:user_uuid/links', async (c) => {
+    const params = c.req.param();
     const body = await c.req.json();
-    const data = await create({ userUuid, data: body });
+    const data = await linksController.create({ ...params, ...body });
     return c.json(data, 201);
   })
-  .get('/:link_uuid', async (c) => {
-    const userUuid = c.req.param('user_uuid');
-    const linkUuid = c.req.param('link_uuid');
-    const data = await show({ userUuid, linkUuid });
+  .get('/users/:user_uuid/links/:link_uuid', async (c) => {
+    const params = c.req.param();
+    const data = await linksController.show(params);
     return c.json(data);
   })
-  .patch('/:link_uuid', async (c) => {
-    const userUuid = c.req.param('user_uuid');
-    const linkUuid = c.req.param('link_uuid');
+  .patch('/users/:user_uuid/links/:link_uuid', async (c) => {
+    const params = c.req.param();
     const body = await c.req.json();
-    const data = await update({ userUuid, linkUuid, data: body });
+    const data = await linksController.update({ ...params, ...body });
     return c.json(data);
   })
-  .delete('/:link_uuid', async (c) => {
-    const userUuid = c.req.param('user_uuid');
-    const linkUuid = c.req.param('link_uuid');
-    await destroy({ userUuid, linkUuid });
+  .delete('/users/:user_uuid/links/:link_uuid', async (c) => {
+    const params = c.req.param();
+    await linksController.destroy(params);
     return c.body(null, 204);
   });
 

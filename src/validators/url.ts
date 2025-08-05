@@ -1,14 +1,3 @@
-export function isObject<T extends object>(value: unknown): value is T {
-  return (
-    typeof value === 'object' &&
-    Object.prototype.toString.call(value) === '[object Object]'
-  );
-}
-
-export function isPositiveInteger(value: unknown): value is number {
-  return typeof value === 'number' && Number.isInteger(value) && value > 0;
-}
-
 export function isSafePublicUrl(value: unknown): value is string {
   if (typeof value !== 'string') return false;
 
@@ -31,4 +20,25 @@ export function isSafePublicUrl(value: unknown): value is string {
   } catch {
     return false;
   }
+}
+
+export const aliasMinLength = 6 as const;
+export const aliasMaxLength = 30 as const;
+export function isValidUrlAlias(alias: unknown): alias is string {
+  const reserved = [
+    'signup',
+    'dashboard',
+    'favicon.ico',
+    'site.manifest',
+    'assets',
+  ];
+
+  const valid =
+    typeof alias === 'string' &&
+    alias.length >= aliasMinLength &&
+    alias.length <= aliasMaxLength &&
+    /^[a-zA-Z0-9_-]+$/.test(alias) &&
+    !reserved.includes(alias.toLowerCase());
+
+  return valid;
 }

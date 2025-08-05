@@ -1,7 +1,7 @@
 import { and, eq, sql } from 'drizzle-orm';
 
 import { db } from '@/backend/database/db';
-import { Link, NewLink } from '@/backend/database/schema';
+import { Link, NewLink } from '@/backend/database/schema/Link';
 
 export const maxLinksPerUser = 10 as const;
 
@@ -15,22 +15,24 @@ export const getLinks = async (userId: number) => {
 
 export const getLinkById = async ({
   userId,
-  linkUuid,
+  link_uuid,
 }: {
   userId: number;
-  linkUuid: string;
+  link_uuid: string;
 }) => {
-  const [link] = await db
-    .select()
-    .from(Link)
-    .where(and(eq(Link.user_id, userId), eq(Link.uuid, linkUuid)));
+  const link = (
+    await db
+      .select()
+      .from(Link)
+      .where(and(eq(Link.user_id, userId), eq(Link.uuid, link_uuid)))
+  ).shift();
   return link;
 };
 
 export const getLinkByAlias = async (alias: string) => {
   const link = (
     await db.select().from(Link).where(eq(Link.alias, alias))
-  ).pop();
+  ).shift();
   return link;
 };
 
@@ -52,29 +54,29 @@ export const createLink = async ({
 
 export const updateLink = async ({
   userId,
-  linkUuid,
-  data: { alias },
+  link_uuid,
+  alias,
 }: {
   userId: number;
-  linkUuid: string;
-  data: Partial<Pick<NewLink, 'alias'>>;
+  link_uuid: string;
+  alias: string;
 }) => {
   const [link] = await db
     .update(Link)
     .set({ alias, updated_at: sql`now()` })
-    .where(and(eq(Link.user_id, userId), eq(Link.uuid, linkUuid)))
+    .where(and(eq(Link.user_id, userId), eq(Link.uuid, link_uuid)))
     .returning();
   return link;
 };
 
 export const deleteLink = async ({
   userId,
-  linkUuid,
+  link_uuid,
 }: {
   userId: number;
-  linkUuid: string;
+  link_uuid: string;
 }) => {
   await db
     .delete(Link)
-    .where(and(eq(Link.user_id, userId), eq(Link.uuid, linkUuid)));
+    .where(and(eq(Link.user_id, userId), eq(Link.uuid, link_uuid)));
 };

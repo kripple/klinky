@@ -8,21 +8,7 @@ import {
   varchar,
 } from 'drizzle-orm/pg-core';
 
-const options = { withTimezone: true } as const;
-
-export const User = pgTable(
-  'users',
-  {
-    id: integer().primaryKey().generatedAlwaysAsIdentity(),
-    uuid: uuid().defaultRandom().unique().notNull(),
-    created_at: timestamp(options).defaultNow().notNull(),
-  },
-  (table) => [
-    uniqueIndex('user_uuid_idx').on(table.uuid),
-    index('user_created_at_idx').on(table.created_at),
-  ],
-);
-export type User = typeof User.$inferSelect;
+import { User } from '@/backend/database/schema/User';
 
 export const Link = pgTable(
   'links',
@@ -34,8 +20,8 @@ export const Link = pgTable(
       .references(() => User.id, { onDelete: 'cascade' }),
     value: varchar().notNull(),
     alias: varchar().notNull(),
-    created_at: timestamp(options).defaultNow().notNull(),
-    updated_at: timestamp(options).defaultNow().notNull(),
+    created_at: timestamp({ withTimezone: true }).defaultNow().notNull(),
+    updated_at: timestamp({ withTimezone: true }).defaultNow().notNull(),
   },
   (table) => [
     uniqueIndex('link_uuid_idx').on(table.uuid),
