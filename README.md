@@ -33,3 +33,8 @@ PATCH  /users/:uuid/links/:link_id
 DELETE /users/:uuid/links/:link_id
 
 GET    /:alias
+
+## TODO
+
+- How should we handle file URLs?
+- Rate limit / throttle / block (by IP?) on multiple requests containing different invalid user ids (like, more than one per second). Protect against users trying to brute-force the auth.
