@@ -1,7 +1,7 @@
-import { api } from '@/frontend/api';
+// import { api } from '@/frontend/api';
 
 export function LinkForm({ user_uuid }: { user_uuid?: string }) {
-  const [createLink, response] = api.useCreateLinkMutation();
+  // const [createLink, response] = api.useCreateLinkMutation();
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
