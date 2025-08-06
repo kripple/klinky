@@ -1,4 +1,6 @@
-import { useEffect } from 'react';
+import type { SerializedError } from '@reduxjs/toolkit';
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query/react';
+import { useEffect, useState } from 'react';
 import * as validator from 'uuid';
 
 import { api } from '@/frontend/api';
@@ -13,13 +15,26 @@ const getPathUuid = () => {
   return valid ? user_uuid : undefined;
 };
 
-export const useCurrentUser = () => {
-  const pathUuid = getPathUuid();
-  const response = pathUuid
-    ? api.useGetUserQuery({ user_uuid: pathUuid })
-    : api.useCreateUserQuery();
+function isQueryError(
+  error?: FetchBaseQueryError | SerializedError,
+): error is FetchBaseQueryError {
+  return error !== undefined && 'status' in error;
+}
 
-  const currentUserUuid = response.currentData?.uuid;
+export const useCurrentUser = () => {
+  const [pathUuid, setPathUuid] = useState<string | undefined>(getPathUuid());
+  const userResponse = api.useGetUserQuery(
+    { user_uuid: pathUuid as string },
+    { skip: !pathUuid },
+  );
+  const [createUser, createUserResponse] = api.useCreateUserMutation();
+  const currentUserUuid =
+    userResponse.currentData?.uuid || createUserResponse.data?.uuid;
+
+  useEffect(() => {
+    if (pathUuid) return;
+    createUser();
+  }, [pathUuid, createUser]);
 
   // Set uuid in path (happy path)
   useEffect(() => {
@@ -29,28 +44,39 @@ export const useCurrentUser = () => {
     const unused = '' as const;
 
     history.replaceState(history.state, unused, `/links/${currentUserUuid}`);
+
+    setPathUuid((current) => {
+      if (current === currentUserUuid) return current;
+      return currentUserUuid;
+    });
   }, [currentUserUuid]);
 
   // pathUuid is not present or is invalid uuid format, create user query is not successful
-  // const createUserError = !pathUuid && response.error;
-  // useEffect(() => {
-  //   if (!createUserError) return;
-  //   console.log({ createUserError });
-  // }, [createUserError]);
+  // --> retry / show generic error
+  const createUserError = !pathUuid && createUserResponse.error;
+  useEffect(() => {
+    if (!createUserError) return;
+    console.log('TODO: retry / show generic error');
+  }, [createUserError]);
 
   // pathUuid is valid uuid format, but user does not exist
-  const pathUserNotFound = pathUuid && response.error;
+  // --> create new user
+  const pathUserNotFound =
+    pathUuid &&
+    isQueryError(userResponse.error) &&
+    userResponse.error.status === 404;
   useEffect(() => {
     if (!pathUserNotFound) return;
-    console.log(pathUserNotFound);
+    setPathUuid(undefined);
   }, [pathUserNotFound]);
 
   // pathUuid is valid uuid format, server responds with unknown error, unable to check if user exists
-  // const serverError = pathUuid && response.error;
-  // useEffect(() => {
-  //   if (!serverError) return;
-  //   console.log(serverError);
-  // }, [serverError]);
+  // --> retry / show generic error
+  const serverError = pathUuid && userResponse.error && !pathUserNotFound;
+  useEffect(() => {
+    if (!serverError) return;
+    console.log('TODO: retry / show generic error');
+  }, [serverError]);
 
-  return response;
+  return userResponse;
 };

@@ -2,7 +2,6 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
-    // baseUrl: `${import.meta.env.VITE_BACKEND_URL}/api`,
     baseUrl: import.meta.env.VITE_BACKEND_URL,
   }),
   tagTypes: ['User', 'Link', 'Links'],
@@ -12,12 +11,11 @@ export const api = createApi({
       providesTags: ['User'],
     }),
 
-    createUser: build.query<UserDto, void>({
+    createUser: build.mutation<UserDto, void>({
       query: () => ({
         url: '/users',
         method: 'POST',
       }),
-      providesTags: ['User'],
     }),
 
     deleteUser: build.mutation<void, UserParams>({
@@ -33,16 +31,13 @@ export const api = createApi({
       providesTags: ['Links'],
     }),
 
-    createLink: build.query<LinkDto, CreateLinkParams>({
+    createLink: build.mutation<LinkDto, CreateLinkParams>({
       query: ({ user_uuid, alias, value }) => ({
         url: `/users/${user_uuid}/links`,
         method: 'POST',
         body: { alias, value },
       }),
-      providesTags: ['Link'],
-      async onQueryStarted(_, { dispatch }) {
-        dispatch(api.util.invalidateTags([{ type: 'Links' }]));
-      },
+      invalidatesTags: ['Links'],
     }),
 
     getLink: build.query<LinkDto, UserParams & LinkParams>({
@@ -51,18 +46,13 @@ export const api = createApi({
       providesTags: ['Link'],
     }),
 
-    updateLink: build.query<LinkDto, UpdateLinkParams>({
+    updateLink: build.mutation<LinkDto, UpdateLinkParams>({
       query: ({ user_uuid, link_uuid, alias }) => ({
         url: `/users/${user_uuid}/links/${link_uuid}`,
         method: 'PATCH',
         body: { alias },
       }),
-      providesTags: ['Link'],
-      async onQueryStarted(_, { dispatch }) {
-        dispatch(
-          api.util.invalidateTags([{ type: 'Links' }, { type: 'Link' }]),
-        );
-      },
+      invalidatesTags: ['Link', 'Links'],
     }),
 
     deleteLink: build.mutation<void, UserParams & LinkParams>({
