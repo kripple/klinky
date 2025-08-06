@@ -1,12 +1,9 @@
+import { HTTPException } from 'hono/http-exception';
 import * as validator from 'uuid';
-
-import { HttpStatus } from '@/utils/errors';
 
 export abstract class ApplicationController {
   throw_validation_error(cause: string) {
-    throw Error(HttpStatus['400 Bad Request'], {
-      cause,
-    });
+    throw new HTTPException(400, { cause });
   }
 
   validate_uuid(type: 'link' | 'user' | string, uuid?: unknown) {

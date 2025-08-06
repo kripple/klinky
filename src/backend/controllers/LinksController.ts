@@ -1,3 +1,4 @@
+import { HTTPException } from 'hono/http-exception';
 import { nanoid } from 'nanoid';
 
 import { UserLinksController } from '@/backend/controllers/UserLinksController';
@@ -10,7 +11,6 @@ import {
   maxLinksPerUser,
   updateLink,
 } from '@/backend/models/link.model';
-import { HttpStatus } from '@/utils/errors';
 import {
   aliasMinLength,
   isSafePublicUrl,
@@ -52,7 +52,7 @@ class LinksController extends UserLinksController {
     const user = await this.get_user_or_404(user_uuid);
     const link = await getLinkById({ userId: user.id, link_uuid });
     if (!link) {
-      throw Error(HttpStatus['404 Not Found'], { cause: 'missing link' });
+      throw new HTTPException(404, { cause: 'missing link' });
     }
     return link;
   };
@@ -70,13 +70,11 @@ class LinksController extends UserLinksController {
         : nanoid(aliasMinLength);
 
     const user = await this.get_user_or_404(user_uuid);
-
     const links = await getLinks(user.id);
 
-    if (links.length === maxLinksPerUser)
-      throw Error(HttpStatus['403 Forbidden'], {
-        cause: 'exceeds max links per user',
-      });
+    if (links.length === maxLinksPerUser) {
+      throw new HTTPException(403, { cause: 'exceeds max links per user' });
+    }
 
     return createLink({ user_id: user.id, value, alias });
   };
@@ -91,10 +89,9 @@ class LinksController extends UserLinksController {
     this.validate_alias(alias);
     const user = await this.get_user_or_404(user_uuid);
     const link = await updateLink({ userId: user.id, link_uuid, alias });
-    if (!link)
-      throw Error(HttpStatus['500 Internal Server Error'], {
-        cause: 'missing link',
-      });
+    if (!link) {
+      throw new HTTPException(404, { cause: 'missing link' });
+    }
     return link;
   };
 

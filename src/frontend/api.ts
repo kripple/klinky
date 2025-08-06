@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({
+    // baseUrl: `${import.meta.env.VITE_BACKEND_URL}/api`,
     baseUrl: import.meta.env.VITE_BACKEND_URL,
   }),
   tagTypes: ['User', 'Link', 'Links'],
@@ -38,7 +39,10 @@ export const api = createApi({
         method: 'POST',
         body: { alias, value },
       }),
-      providesTags: ['Link'], // FIXME: doesn't this technically invalidate 'Links'? maybe don't use a query for this
+      providesTags: ['Link'],
+      async onQueryStarted(_, { dispatch }) {
+        dispatch(api.util.invalidateTags([{ type: 'Links' }]));
+      },
     }),
 
     getLink: build.query<LinkDto, UserParams & LinkParams>({
@@ -47,22 +51,26 @@ export const api = createApi({
       providesTags: ['Link'],
     }),
 
-    updateLink: build.mutation<UserDto, UpdateLinkParams>({
+    updateLink: build.query<LinkDto, UpdateLinkParams>({
       query: ({ user_uuid, link_uuid, alias }) => ({
         url: `/users/${user_uuid}/links/${link_uuid}`,
         method: 'PATCH',
         body: { alias },
       }),
-      invalidatesTags: ['Link', 'Links'], // TODO: soft update on client instead of invalidating 'Links'
+      providesTags: ['Link'],
+      async onQueryStarted(_, { dispatch }) {
+        dispatch(
+          api.util.invalidateTags([{ type: 'Links' }, { type: 'Link' }]),
+        );
+      },
     }),
 
-    // deleteLink
     deleteLink: build.mutation<void, UserParams & LinkParams>({
       query: ({ user_uuid, link_uuid }) => ({
         url: `/users/${user_uuid}/links/${link_uuid}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Link', 'Links'], // TODO: soft delete on client instead of invalidating 'Links'
+      invalidatesTags: ['Link', 'Links'],
     }),
   }),
 });

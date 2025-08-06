@@ -38,3 +38,9 @@ GET    /:alias
 
 - How should we handle file URLs?
 - Rate limit / throttle / block (by IP?) on multiple requests containing different invalid user ids (like, more than one per second). Protect against users trying to brute-force the auth.
+
+#### netlify-cli alternativePathsFor
+
+node_modules/netlify-cli/dist/utils/proxy.js line 167
+
+return empty array

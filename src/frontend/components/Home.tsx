@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 
+import { api } from '@/frontend/api';
 import { useCurrentUser } from '@/frontend/hooks/useCurrentUser';
 
 export function Home() {
   const response = useCurrentUser();
 
-  useEffect(() => {
-    console.log(response);
-  }, [response]);
+  // useEffect(() => {
+  //   console.log(response);
+  // }, [response]);
 
   return (
     <>

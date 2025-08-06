@@ -63,7 +63,7 @@ async function expectRedirect({
   expect(response.headers()['location'], description).toEqual(goTo);
 }
 
-test.describe('app', () => {
+test.describe('api', () => {
   test('happy path', async ({ request }) => {
     const value = 'https://example.com';
     const customAlias = nanoid();
