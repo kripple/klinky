@@ -57,11 +57,13 @@
   margin-left: auto;
   margin-right: auto;
   max-width: 56rem;
-  padding-bottom: 8rem;
+  padding: 1rem;
+  /* padding-bottom: 8rem;
   padding-left: 1rem;
   padding-right: 1rem;
-  padding-top: 5rem;
+  padding-top: 5rem; */
   text-align: center;
+  width: 100%;
 }
 
 @media (min-width: 640px) {
@@ -78,6 +80,13 @@
   }
 }
 
+section {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .card {
   background-color: #ffffff;
   border: 1px solid #e2e8f0;
@@ -92,26 +101,25 @@ form {
   gap: 12px;
 }
 
-button {
-  background-color: #7c7cff;
-  border: 1px solid #7c7cff;
-  border-radius: 4px;
-  color: #ffffff;
-  font-size: 0.875rem;
-  font-weight: 600;
-  letter-spacing: 0.025em;
-  line-height: 1.5rem;
-  padding: 8px 14px;
+form.card {
+  max-width: 36rem;
+  width: 100%;
 }
+
 button:not(:disabled) {
-  cursor: pointer;
+  filter: brightness(2);
+}
+
+button,
+input {
+  outline-color: #3333ff;
 }
 
 .heading {
   font-size: 72px;
   font-weight: 400;
-  margin: 0;
-  margin-bottom: 32px;
+  /* margin: 0;
+  margin-bottom: 32px; */
 }
 
 .heading-highlight {
@@ -125,8 +133,8 @@ button:not(:disabled) {
   font-size: 18px;
   font-weight: 400;
   line-height: 2rem;
-  margin: 0;
-  margin-bottom: 32px;
+  /* margin: 0;
+  margin-bottom: 32px; */
 }
 
 .key-features-list {
@@ -146,36 +154,15 @@ button:not(:disabled) {
   transform: scale(0.5);
 }
 
-.input-pair {
-  display: flex;
-}
-
 input {
-  border: 1px solid #c0c0ff9b;
-  border-radius: 4px;
-  display: flex;
-  font-family: monospace;
-  font-size: 16px;
-  letter-spacing: -0.8px;
-  line-height: 24px;
-  padding: 8px 16px;
+  border-color: #c0c0ff9b;
 }
 
-input.readonly-prefix {
-  background-color: #e5e5ff62;
-  border-bottom-right-radius: 0;
-  border-right: transparent;
-  border-top-right-radius: 0;
-  color: #212529bf;
-  padding-right: 6px;
-  pointer-events: none;
+input.prefix {
   text-align: right;
-  width: calc(20ch + 6px); /* https://klinky.link/ is 20 characters in length */
+  width: 23ch;
 }
 
-input.input-value {
-  border-bottom-left-radius: 0;
-  border-left: transparent;
-  border-top-left-radius: 0;
-  flex-grow: 1;
+input:read-only {
+  background-color: #e5e5ff62;
 }

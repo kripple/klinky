@@ -1,3 +1,7 @@
+:root {
+  --theme-color: #7c7cff;
+}
+
 *,
 ::after,
 ::before {
@@ -10,6 +14,7 @@ body,
   height: 100vh;
   margin: 0;
   overflow: hidden;
+  overscroll-behavior: auto;
   padding: 0;
   width: 100vw;
 }
@@ -25,9 +30,4 @@ body {
 
 #root {
   position: relative;
-}
-
-button,
-input {
-  outline-color: #3333ff;
 }

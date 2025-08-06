@@ -1,3 +1,4 @@
+import { LinkForm } from '@/frontend/components/LinkForm';
 import { Links } from '@/frontend/components/Links';
 import { useCurrentUser } from '@/frontend/hooks/useCurrentUser';
 
@@ -9,7 +10,9 @@ export function Home() {
     <>
       <header className="header">
         <div className="app-title">klinky.link</div>
-        <button disabled={!uuid}>Short Links</button>
+        <button className="btn btn-primary" disabled={!uuid}>
+          Links
+        </button>
       </header>
 
       <main className="main">
@@ -19,44 +22,13 @@ export function Home() {
             <span className="heading-highlight">Link Shortener</span>
           </h1>
           <h2 className="subheading">
-            Privacy isn’t just a feature — it’s the point.
-            <br />
+            {/* Privacy isn’t just a feature — it’s the point. */}
+            {/* <br /> */}
             No tracking. No accounts. Just links.
           </h2>
-          <div className="card">
-            <form>
-              <div className="input-pair">
-                <input
-                  className="readonly-prefix"
-                  name="link-prefix"
-                  readOnly
-                  tabIndex={-1}
-                  value="https://"
-                ></input>
-                <input
-                  className="input-value"
-                  name="link"
-                  placeholder="Enter link here"
-                  required
-                ></input>
-              </div>
-              <div className="input-pair">
-                <input
-                  className="readonly-prefix"
-                  name="alias-prefix"
-                  readOnly
-                  tabIndex={-1}
-                  value="https://klinky.link/"
-                ></input>
-                <input
-                  className="input-value"
-                  name="alias"
-                  placeholder="Customize your link (optional)"
-                ></input>
-              </div>
-              <button type="submit">Create Short Link</button>
-            </form>
-          </div>
+
+          <LinkForm user_uuid={uuid} />
+
           <div className="key-features-list">
             <div className="feature-badge">
               <div className="badge badge-primary badge-xs"></div>
