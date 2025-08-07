@@ -31,11 +31,11 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
   return (
     <form
       autoComplete="off"
-      className="card bg-base-100 rounded-box shadow-md"
+      className="card bg-base-100 shadow-md m-6 p-6"
       onSubmit={submit}
     >
       <div>
-        <label className="input input-primary">
+        <label className="input input-primary w-full">
           {/* https:// */}
           <span className="label">https://</span>
           <input
@@ -51,7 +51,7 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
         <p className="validator-hint">TBD</p>
       </div>
       <div>
-        <label className="input input-primary">
+        <label className="input input-primary w-full">
           https://klinky.link/
           <input
             autoComplete="off"
@@ -72,11 +72,11 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
       >
         Create Short Link
       </button>
-      <p className="validator-hint">
+      {/* <p className="validator-hint">
         {maxLinks
           ? `There is a maximum of ${maxLinksPerUser} links per user, please delete a link before creating a new one.`
           : null}
-      </p>
+      </p> */}
     </form>
   );
 }

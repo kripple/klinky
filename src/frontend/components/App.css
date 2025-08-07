@@ -1,3 +1,11 @@
 body {
   font-family: monospace;
 }
+
+.navbar {
+  height: var(--header-height);
+}
+
+.main-content {
+  padding-bottom: var(--header-height);
+}
