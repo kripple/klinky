@@ -1,33 +1,12 @@
+@import 'tailwindcss';
+@plugin "daisyui" {
+  themes: pastel;
+}
+
 :root {
-  --theme-color: #7c7cff;
-}
-
-*,
-::after,
-::before {
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  height: 100vh;
-  margin: 0;
-  overflow: hidden;
-  overscroll-behavior: auto;
-  padding: 0;
-  width: 100vw;
+  --html-bg-color: rgba(229, 229, 247, 0.2);
 }
 
 html {
-  -webkit-locale: 'en';
-}
-
-body {
-  color: #475569;
-  font-family: monospace;
-}
-
-#root {
-  position: relative;
+  background-color: var(--html-bg-color);
 }
