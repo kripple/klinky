@@ -3,8 +3,84 @@ import * as z from 'zod';
 
 import { aliasMinLength } from '@/validators/string';
 
-const max = 30 as const;
+export const max = 30 as const;
 const regex = /^[a-zA-Z0-9_-]+$/;
+
+// home
+// dashboard
+// settings
+// profile
+// help
+// support
+// contact
+// about
+// terms
+// privacy
+// legal
+// faq
+// docs
+// api
+// error
+// notfound
+// forbidden
+// unauthorized
+// maintenance
+// config
+// setup
+// system
+// root
+// debug
+// test
+// dev
+// static
+// assets
+// cdn
+// server
+// database
+// backend
+// frontend
+// build
+// dist
+// env
+// null
+// undefined
+// true
+// false
+// yes
+// no
+// new
+// edit
+// delete
+// create
+// update
+// upload
+// download
+// search
+// default
+// public
+// class
+// document
+// window
+// documentation
+// service
+// app
+// web
+// mobile
+// desktop
+// internal
+// external
+// public
+// private
+// beta
+// preview
+// android
+// chrome
+// apple
+// website
+// webadmin
+// sysadmin
+
+// check after removing hyphens & underscores
 
 const isReserved = (alias: string) =>
   [

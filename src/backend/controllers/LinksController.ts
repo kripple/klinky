@@ -7,11 +7,10 @@ import {
   getLinkByAlias,
   getLinkById,
   getLinks,
-  maxLinksPerUser,
   updateLink,
 } from '@/backend/models/link.model';
 import { validateAlias, validateOptionalAlias } from '@/validators/alias';
-import { validateLink } from '@/validators/link';
+import { maxLinksPerUser, validateLink } from '@/validators/link';
 
 class LinksController extends UserLinksController {
   validate_alias(alias?: unknown): alias is string {

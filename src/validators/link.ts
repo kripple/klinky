@@ -2,7 +2,8 @@ import * as z from 'zod';
 
 import { aliasMinLength } from '@/validators/string';
 
-const max = 2000 as const;
+export const max = 2000 as const;
+export const maxLinksPerUser = 10 as const;
 
 const isUrl = (value: string): URL | false => {
   try {
@@ -24,7 +25,7 @@ const looksLikeIpAddress = (url: URL) => /^[\d.:]+$/.test(url.hostname);
 
 const Link = z
   .string()
-  .min(aliasMinLength + 1)
+  .min(aliasMinLength)
   .max(max)
   .refine((link) => isUrl(link), { error: 'invalid URL', abort: true })
   .refine(

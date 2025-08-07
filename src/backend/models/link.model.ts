@@ -2,8 +2,7 @@ import { and, eq, sql } from 'drizzle-orm';
 
 import { db } from '@/backend/database/db';
 import { Link, NewLink } from '@/backend/database/schema/Link';
-
-export const maxLinksPerUser = 10 as const;
+import { maxLinksPerUser } from '@/validators/link';
 
 export const getLinks = async (userId: number) => {
   return db
