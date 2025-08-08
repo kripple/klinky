@@ -1,12 +1,16 @@
 declare type AppDatabase = import('@/types/database').AppDatabase;
 
 declare type FormEvent =
-  import('@/types/react').ReactFormEvent<HTMLFormElement>;
+  import('@/types/events').ReactFormEvent<HTMLFormElement>;
 
 declare type ChangeEvent =
-  import('@/types/react').ReactChangeEvent<HTMLInputElement>;
+  import('@/types/events').ReactChangeEvent<HTMLInputElement>;
 
-declare type ClickEvent = import('@/types/react').ReactMouseEvent<
+declare type ClickEvent = import('@/types/events').ReactMouseEvent<
   HTMLInputElement,
   MouseEvent
 >;
+
+declare type ReactNode = import('@/types/react').ReactNodeType;
+
+declare type SetState<T> = import('@/types/react').SetState<T>;

@@ -1,4 +1,5 @@
 import { HTTPException } from 'hono/http-exception';
+import { nanoid } from 'nanoid';
 
 import { UserLinksController } from '@/backend/controllers/UserLinksController';
 import {
@@ -11,6 +12,7 @@ import {
 } from '@/backend/models/link.model';
 import { validateAlias, validateOptionalAlias } from '@/validators/alias';
 import { maxLinksPerUser, validateLink } from '@/validators/link';
+import { aliasMinLength } from '@/validators/string';
 
 class LinksController extends UserLinksController {
   validate_alias(alias?: unknown): alias is string {
@@ -60,7 +62,10 @@ class LinksController extends UserLinksController {
     this.validate_uuid('user', user_uuid);
     this.validate_url(value);
 
-    const alias = validateOptionalAlias(optionalParams.alias);
+    const optionalAlias = validateOptionalAlias(optionalParams.alias);
+    const alias = optionalAlias.success
+      ? optionalAlias.data
+      : nanoid(aliasMinLength);
     const user = await this.get_user_or_404(user_uuid);
     const links = await getLinks(user.id);
 

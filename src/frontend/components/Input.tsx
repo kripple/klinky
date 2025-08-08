@@ -16,7 +16,7 @@ export function Input({
     <>
       <div className="indicator w-full">
         <label
-          className={`input ${invalid ? 'input-error' : 'input-primary'} w-full`}
+          className={`input w-full ${invalid ? 'input-error' : 'input-primary'}`.trimEnd()}
         >
           {label}
           {invalid ? (

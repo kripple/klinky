@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import * as z from 'zod';
-import { fromError } from 'zod-validation-error';
+import { useEffect, useState } from 'react';
 
 import { api } from '@/frontend/api';
 import { Input } from '@/frontend/components/Input';
@@ -20,23 +18,41 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
   const [aliasErrors, setAliasErrors] = useState<string[]>([]);
   const [linkErrors, setLinkErrors] = useState<string[]>([]);
 
-  const submit = (event: FormEvent) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  useEffect(() => {
+    console.log(response);
+  }, [response]);
 
-    const linkValue = data.get('link');
-    const link = typeof linkValue === 'string' ? linkValue : '';
-    const linkResult = validateLink(linkPrefix + link);
-    if (!linkResult.success) {
-      setLinkErrors(linkResult.errors);
-    }
-
-    const aliasValue = data.get('alias');
-    const alias = typeof aliasValue === 'string' ? aliasValue : '';
-    const aliasResult = validateOptionalAlias(alias);
+  const parseForm = ({
+    alias,
+    link,
+  }: {
+    [key in 'alias' | 'link']: FormDataEntryValue | null;
+  }): CreateLinkParams | false => {
+    const aliasString = typeof alias === 'string' ? alias : '';
+    const aliasResult = validateOptionalAlias(aliasString);
     if (!aliasResult.success) {
       setAliasErrors(aliasResult.errors);
     }
+    const linkString = typeof link === 'string' ? link : '';
+    const linkResult = validateLink(linkPrefix + linkString);
+    if (!linkResult.success) {
+      setLinkErrors(linkResult.errors);
+    }
+    if (!user_uuid || !(aliasResult.success && linkResult.success)) {
+      return false;
+    }
+    return { alias: aliasResult.data, value: linkResult.data, user_uuid };
+  };
+
+  const submit = (event: FormEvent) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const params = parseForm({
+      alias: data.get('alias'),
+      link: data.get('link'),
+    });
+    if (!params) return;
+    createLink(params);
   };
 
   return (

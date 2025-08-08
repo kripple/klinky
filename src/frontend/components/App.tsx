@@ -1,3 +1,5 @@
+import { useRef, useState } from 'react';
+
 import { api } from '@/frontend/api';
 import { Background } from '@/frontend/components/Background';
 import { Features } from '@/frontend/components/Features';
@@ -18,20 +20,31 @@ export function App() {
     { skip: !uuid },
   );
   const links = linksResponse.currentData;
-  const hasLinks = links && links.length > 0;
+
+  const [showLinks, setShowLinks] = useState<boolean>(false);
 
   return (
     <>
       <Background />
-      <div className="flex flex-col min-h-screen">
-        <Header />
+      <div className="flex flex-col min-h-screen h-full">
+        <Header
+          links={links}
+          setShowLinks={setShowLinks}
+          showLinks={showLinks}
+        />
 
-        <main className="flex-grow flex items-center justify-center px-4 main-content">
+        <main className="flex-grow flex items-center justify-center px-2 main-content relative w-screen h-full">
           <section className="flex flex-col w-xl text-center gap-6">
             <Headings />
             <LinkForm user_uuid={uuid} />
             <Features />
           </section>
+
+          {showLinks ? (
+            <aside className="card bg-base-100 shadow-md p-6 w-1/2 h-full flex">
+              <Links links={links} />
+            </aside>
+          ) : null}
         </main>
 
         {/* <Footer /> */}
