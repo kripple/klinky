@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import * as z from 'zod';
+import { fromError } from 'zod-validation-error';
 
 import { api } from '@/frontend/api';
-import { maxLinksPerUser } from '@/validators/link';
-
-// const pretty = z.prettifyError(result.error);
+import { Input } from '@/frontend/components/Input';
+import { aliasPrefix, validateOptionalAlias } from '@/validators/alias';
+import { linkPrefix, maxLinksPerUser, validateLink } from '@/validators/link';
 
 export function LinkForm({ user_uuid }: { user_uuid?: string }) {
   const linksResponse = api.useGetLinksQuery(
@@ -16,16 +17,26 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
     linksResponse.currentData.length >= maxLinksPerUser;
 
   const [createLink, response] = api.useCreateLinkMutation();
-  const [errors, setErrors] = useState<
-    { [key in 'alias' | 'link']: string[] }[]
-  >([]);
+  const [aliasErrors, setAliasErrors] = useState<string[]>([]);
+  const [linkErrors, setLinkErrors] = useState<string[]>([]);
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const alias = data.get('alias');
-    const link = data.get('link');
-    console.log({ alias, link });
+
+    const linkValue = data.get('link');
+    const link = typeof linkValue === 'string' ? linkValue : '';
+    const linkResult = validateLink(linkPrefix + link);
+    if (!linkResult.success) {
+      setLinkErrors(linkResult.errors);
+    }
+
+    const aliasValue = data.get('alias');
+    const alias = typeof aliasValue === 'string' ? aliasValue : '';
+    const aliasResult = validateOptionalAlias(alias);
+    if (!aliasResult.success) {
+      setAliasErrors(aliasResult.errors);
+    }
   };
 
   return (
@@ -34,37 +45,25 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
       className="card bg-base-100 shadow-md m-6 p-6"
       onSubmit={submit}
     >
-      <div>
-        <label className="input input-primary w-full">
-          {/* https:// */}
-          <span className="label">https://</span>
-          <input
-            autoComplete="off"
-            autoCorrect="off"
-            className="grow"
-            name="link"
-            placeholder="Enter link here"
-            spellCheck="false"
-            type="text"
-          />
-        </label>
-        <p className="validator-hint">TBD</p>
-      </div>
-      <div>
-        <label className="input input-primary w-full">
-          https://klinky.link/
-          <input
-            autoComplete="off"
-            autoCorrect="off"
-            className="grow"
-            name="alias"
-            placeholder="Customize your link (optional)"
-            spellCheck="false"
-            type="text"
-          />
-        </label>
-        <p className="validator-hint">TBD</p>
-      </div>
+      <Input
+        errors={linkErrors}
+        label={linkPrefix}
+        name="link"
+        onChange={() =>
+          setLinkErrors((current) => (current.length === 0 ? current : []))
+        }
+        placeholder="Enter link here"
+      />
+      <Input
+        errors={aliasErrors}
+        label={aliasPrefix}
+        name="alias"
+        onChange={() =>
+          setAliasErrors((current) => (current.length === 0 ? current : []))
+        }
+        placeholder="Customize your link (optional)"
+      />
+
       <button
         className="btn btn-primary"
         disabled={!user_uuid || response.isLoading || maxLinks}

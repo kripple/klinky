@@ -6,7 +6,7 @@ export function Headings() {
         className="flex flex-col gap-4"
       >
         <span className="text-5xl text-neutral">The anti-lytics</span>
-        <span className="text-6xl text-primary-content">Link Shortener</span>
+        <span className="text-6xl text-primary">Link Shortener</span>
       </h1>
 
       <p className="text-base-content text-lg">

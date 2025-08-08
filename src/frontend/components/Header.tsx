@@ -2,7 +2,7 @@ export function Header({ showLinks }: { showLinks?: () => void }) {
   return (
     <header className="navbar">
       <div className="navbar-start">
-        <a className="btn btn-ghost text-xl text-primary-content">
+        <a className="btn btn-ghost text-xl text-primary">
           klinky.link
         </a>
       </div>

@@ -9,7 +9,7 @@ export function Features() {
     <ul className="flex flex-wrap justify-center gap-3">
       {features.map(([feature, color]) => (
         <li
-          className={`badge badge-outline bg-base-100 border-1 p-3 whitespace-nowrap ${color}`}
+          className={`badge badge-outline bg-base-100 border-1 p-3 whitespace-nowrap ${color} rounded-full`}
           key={`${feature}-${color}`}
         >
           <span className="text-neutral">{feature}</span>

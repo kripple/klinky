@@ -4,6 +4,7 @@ import * as z from 'zod';
 import { aliasMinLength } from '@/validators/string';
 
 export const max = 30 as const;
+export const aliasPrefix = 'https://klinky.link/' as const;
 const regex = /^[a-zA-Z0-9_-]+$/;
 
 // home
@@ -123,31 +124,46 @@ const isReserved = (alias: string) =>
 
 const Alias = z
   .string()
-  .min(aliasMinLength)
-  .max(max)
-  .regex(regex)
-  .refine((alias) => !isReserved(alias), { error: 'reserved keyword' })
-  .refine((alias) => alias.startsWith('index'), {
-    error: `custom link may not begin with 'index'`,
+  .min(aliasMinLength, {
+    error: `Your custom link should be at least ${aliasMinLength} characters long.`,
+    abort: true,
   })
-  .refine((alias) => alias.startsWith('assets'), {
-    error: `custom link may not begin with 'assets'`,
+  .max(max, {
+    error: `Your custom link can’t be more than ${max} characters long.`,
+    abort: true,
+  })
+  .regex(regex, {
+    error:
+      'Custom links can only have letters, numbers, dashes, and underscores.',
+    abort: true,
+  })
+  .refine((alias) => !isReserved(alias), {
+    error: 'This link is unavailable. Please choose a different one.',
+  })
+  .refine((alias) => !alias.startsWith('index'), {
+    error: `Custom links can't start with 'index'.`,
+  })
+  .refine((alias) => !alias.startsWith('assets'), {
+    error: `Custom links can't start with 'assets'.`,
   });
 
 type Alias = z.infer<typeof Alias>;
 
-export const validateAlias = (alias?: unknown) => Alias.safeParse(alias);
-
-export const validateOptionalAlias = (alias?: unknown) => {
-  const defaultResult = Alias.safeParse(nanoid(aliasMinLength));
+export const validateAlias = (alias?: unknown) => {
   const result = Alias.safeParse(alias);
 
-  // sanity check
-  if (!defaultResult.success) {
-    throw Error(
-      `We've done something terribly wrong, this error should not be possible.`,
-    );
+  if (result.error) {
+    return {
+      ...result,
+      errors: result.error.issues.map((issue) => issue.message),
+    };
+  } else {
+    return result;
   }
+};
 
-  return result.success ? result.data : defaultResult.data;
+export const validateOptionalAlias = (alias?: unknown) => {
+  return typeof alias !== 'string' || alias === ''
+    ? validateAlias(nanoid(aliasMinLength))
+    : validateAlias(alias);
 };

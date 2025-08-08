@@ -4,6 +4,8 @@ import { aliasMinLength } from '@/validators/string';
 
 export const max = 2000 as const;
 export const maxLinksPerUser = 10 as const;
+export const linkPrefix = 'https://' as const;
+export const min = aliasMinLength + linkPrefix.length;
 
 const isUrl = (value: string): URL | false => {
   try {
@@ -14,7 +16,7 @@ const isUrl = (value: string): URL | false => {
   }
 };
 
-const isHttps = (url: URL) => url.protocol !== 'https:';
+const isHttps = (url: URL) => url.protocol === 'https:';
 
 const isLocal = (url: URL) =>
   url.hostname === 'localhost' || url.hostname.endsWith('.local');
@@ -25,31 +27,54 @@ const looksLikeIpAddress = (url: URL) => /^[\d.:]+$/.test(url.hostname);
 
 const Link = z
   .string()
-  .min(aliasMinLength)
-  .max(max)
-  .refine((link) => isUrl(link), { error: 'invalid URL', abort: true })
+  .min(min, {
+    error: `Your link should be at least ${min} characters long.`,
+    abort: true,
+  })
+  .max(max, {
+    error: `Your link can’t be more than ${max} characters long.`,
+    abort: true,
+  })
+  .refine((link) => isUrl(link), {
+    error: 'Please enter a valid URL.',
+    abort: true,
+  })
   .refine(
     (link) => {
       const url = isUrl(link);
       return url && isHttps(url);
     },
-    { error: 'invalid protocol, please use https' },
+    { error: 'Links must use HTTPS for security.' },
   )
   .refine(
     (link) => {
       const url = isUrl(link);
       return url && !isLocal(url);
     },
-    { error: 'local URLs are not allowed' },
+    {
+      error:
+        'Links to local or private addresses (like localhost) aren’t allowed.',
+    },
   )
   .refine(
     (link) => {
       const url = isUrl(link);
       return url && !looksLikeIpAddress(url);
     },
-    { error: 'IP addresses are not allowed' },
+    { error: 'Links pointing directly to IP addresses aren’t allowed.' },
   );
 
 type Link = z.infer<typeof Link>;
 
-export const validateLink = (link: unknown) => Link.safeParse(link);
+export const validateLink = (link: unknown) => {
+  const result = Link.safeParse(link);
+
+  if (result.error) {
+    return {
+      ...result,
+      errors: result.error.issues.map((issue) => issue.message),
+    };
+  } else {
+    return result;
+  }
+};
