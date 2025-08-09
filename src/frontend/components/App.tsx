@@ -44,11 +44,11 @@ export function App() {
           </section>
 
           {showLinks && (links || [])?.length > 0 ? (
-            <aside className="card bg-base-100 shadow-md w-1/2 p-1 aside border border-primary-content">
+            <aside className="card bg-base-100 shadow-md w-1/2 max-w-xl p-1 aside border border-primary-content">
               <Links links={links} />
-              <button className="btn btn-secondary mx-2 mb-2 mt-1">
-                Delete All Links
-              </button>
+              <div className="flex flex-grow items-end mx-2 mb-2 mt-1">
+                <button className="btn btn-secondary w-full">Delete All Links</button>
+              </div>
             </aside>
           ) : null}
         </main>
