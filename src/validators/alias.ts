@@ -4,7 +4,8 @@ import * as z from 'zod';
 import { aliasMinLength } from '@/validators/string';
 
 export const max = 30 as const;
-export const aliasPrefix = 'https://klinky.link/' as const;
+export const aliasDisplayPrefix = 'klinky.link/' as const;
+export const aliasPrefix = `https://${aliasDisplayPrefix}` as const;
 const regex = /^[a-zA-Z0-9_-]+$/;
 
 // home
@@ -162,6 +163,7 @@ export const validateAlias = (alias?: unknown) => {
   }
 };
 
+// FIXME: don't allow underscores or dashes in the default aliases
 export const validateOptionalAlias = (alias?: unknown) => {
   return typeof alias !== 'string' || alias === ''
     ? validateAlias(nanoid(aliasMinLength))

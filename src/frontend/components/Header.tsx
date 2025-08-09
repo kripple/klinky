@@ -36,19 +36,21 @@ export function Header({
         <a className="btn btn-ghost text-xl text-primary">klinky.link</a>
       </div>
       <div className="navbar-end dropdown">
-        <button
-          className="btn btn-primary pl-3 pr-2"
-          onClick={
-            showLinks ? () => setShowLinks(false) : () => setShowLinks(true)
-          }
-        >
-          Links
-          <span
-            className={`badge aspect-square rounded-full font-bold p-1 m-0 h-auto ${showLinks ? 'badge-secondary' : 'badge-accent'}`}
+        {(links || [])?.length > 0 ? (
+          <button
+            className="btn btn-primary pl-3 pr-2"
+            onClick={
+              showLinks ? () => setShowLinks(false) : () => setShowLinks(true)
+            }
           >
-            {showLinks ? svgIcon('close') : badgeCount}
-          </span>
-        </button>
+            Links
+            <span
+              className={`badge aspect-square rounded-full font-bold p-1 m-0 h-auto ${showLinks ? 'badge-secondary' : 'badge-accent'}`}
+            >
+              {showLinks ? svgIcon('close') : badgeCount}
+            </span>
+          </button>
+        ) : null}
       </div>
     </header>
   );

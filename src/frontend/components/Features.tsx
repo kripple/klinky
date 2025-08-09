@@ -1,7 +1,7 @@
 export function Features() {
   const features = [
     ['Free to use', 'badge-info'],
-    ['Open source', 'badge-success'],
+    ['Open source', 'badge-accent'],
     ['No signup required', 'badge-warning'],
   ] as const;
 

@@ -1,3 +1,14 @@
+html {
+  background-color: var(--html-bg-color);
+}
+
+html,
+body,
+#root,
+.app {
+  height: 100vh;
+}
+
 body {
   font-family: monospace;
 }
@@ -6,6 +17,16 @@ body {
   height: var(--header-height);
 }
 
-.main-content {
-  padding-bottom: var(--header-height);
+.main {
+  height: calc(100vh - (2 * var(--header-height)));
+}
+
+.aside {
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.klinky-link {
+  text-decoration-thickness: 2px;
+  text-underline-offset: 1.5px;
 }

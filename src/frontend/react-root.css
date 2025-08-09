@@ -9,13 +9,3 @@
   --header-height: var(--bg-size-x2);
   --html-bg-color: rgba(229, 229, 247, 0.2);
 }
-
-html {
-  background-color: var(--html-bg-color);
-}
-
-html,
-body,
-#root {
-  height: 100%;
-}
