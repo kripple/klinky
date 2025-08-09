@@ -5,6 +5,7 @@ import { UserLinksController } from '@/backend/controllers/UserLinksController';
 import {
   createLink,
   deleteLink,
+  deleteLinks,
   getLinkByAlias,
   getLinkById,
   getLinks,
@@ -62,6 +63,7 @@ class LinksController extends UserLinksController {
     this.validate_uuid('user', user_uuid);
     this.validate_url(value);
 
+    // FIXME: don't allow underscores or dashes in the default aliases
     const optionalAlias = validateOptionalAlias(optionalParams.alias);
     const alias = optionalAlias.success
       ? optionalAlias.data
@@ -99,6 +101,12 @@ class LinksController extends UserLinksController {
     this.validate_uuid('link', link_uuid);
     const user = await this.get_user_or_404(user_uuid);
     await deleteLink({ userId: user.id, link_uuid });
+  };
+
+  destroy_all = async ({ user_uuid }: UserParams) => {
+    this.validate_uuid('user', user_uuid);
+    const user = await this.get_user_or_404(user_uuid);
+    await deleteLinks({ userId: user.id });
   };
 
   unshorten = async ({ alias }: { alias: string }) => {

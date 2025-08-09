@@ -36,6 +36,11 @@ links
     const params = c.req.param();
     await linksController.destroy(params);
     return c.body(null, 204);
+  })
+  .delete('/users/:user_uuid/links', async (c) => {
+    const params = c.req.param();
+    await linksController.destroy_all(params);
+    return c.body(null, 204);
   });
 
 export { links };

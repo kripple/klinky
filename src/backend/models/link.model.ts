@@ -79,3 +79,7 @@ export const deleteLink = async ({
     .delete(Link)
     .where(and(eq(Link.user_id, userId), eq(Link.uuid, link_uuid)));
 };
+
+export const deleteLinks = async ({ userId }: { userId: number }) => {
+  await db.delete(Link).where(eq(Link.user_id, userId));
+};
