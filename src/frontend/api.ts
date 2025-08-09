@@ -62,5 +62,13 @@ export const api = createApi({
       }),
       invalidatesTags: ['Link', 'Links'],
     }),
+
+    deleteLinks: build.mutation<void, UserParams>({
+      query: ({ user_uuid }) => ({
+        url: `/users/${user_uuid}/links`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Link', 'Links'],
+    }),
   }),
 });
