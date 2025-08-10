@@ -1,4 +1,5 @@
-import { nanoid } from 'nanoid';
+import { customAlphabet } from 'nanoid';
+import { nolookalikesSafe } from 'nanoid-dictionary';
 import * as z from 'zod';
 
 import { aliasMinLength } from '@/validators/string';
@@ -166,6 +167,11 @@ export const validateAlias = (alias?: unknown) => {
 // FIXME: don't allow underscores or dashes in the default aliases
 export const validateOptionalAlias = (alias?: unknown) => {
   return typeof alias !== 'string' || alias === ''
-    ? validateAlias(nanoid(aliasMinLength))
+    ? validateAlias(generate())
     : validateAlias(alias);
+};
+
+export const generate = () => {
+  const nanoid = customAlphabet(nolookalikesSafe, aliasMinLength);
+  return nanoid();
 };
