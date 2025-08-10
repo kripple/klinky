@@ -16,7 +16,6 @@ import {
   validateOptionalAlias,
 } from '@/validators/alias';
 import { maxLinksPerUser, validateLink } from '@/validators/link';
-import { aliasMinLength } from '@/validators/string';
 
 class LinksController extends UserLinksController {
   validate_alias(alias?: unknown): alias is string {

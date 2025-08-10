@@ -1,4 +1,5 @@
-import { ErrorIndicator } from './ErrorIndicator';
+import { ErrorIndicator } from '@/frontend/components/ErrorIndicator';
+
 export function Input({
   label,
   name,
@@ -15,13 +16,14 @@ export function Input({
   onChange?: () => void;
 }) {
   const invalid = errors.length > 0;
+  const contentLength = label.length + placeholder.length;
   const inputProps = {
     'aria-errormessage': errors.join(', '),
     'aria-invalid': invalid,
     autoComplete: 'off',
     autoCorrect: 'off',
     className: 'grow',
-    placeholder: placeholder,
+    placeholder,
     spellCheck: 'false',
     type: 'text',
   } as const;
@@ -30,7 +32,7 @@ export function Input({
     <>
       <ErrorIndicator show={invalid}>
         <label
-          className={`input w-full ${invalid ? 'input-error' : 'input-primary'}`.trimEnd()}
+          className={`input w-full gap-0 tracking-0 box-content min-w-[${contentLength}ch] ${invalid ? 'input-error' : 'input-primary'}`.trimEnd()}
         >
           {label}
           {disabled ? (
