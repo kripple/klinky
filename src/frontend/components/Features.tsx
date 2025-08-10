@@ -1,20 +1,30 @@
 export function Features() {
-  const features = [
-    ['Free to use', 'badge-info'],
-    ['Open source', 'badge-accent'],
-    ['No signup required', 'badge-warning'],
-  ] as const;
+  // TODO: handle broken links
+
+  const style =
+    'btn btn-outline bg-base-100 rounded-full font-normal text-neutral px-3 h-7' as const;
 
   return (
-    <ul className="flex flex-wrap justify-center gap-3">
-      {features.map(([feature, color]) => (
-        <li
-          className={`badge badge-outline bg-base-100 border-1 p-3 whitespace-nowrap ${color} rounded-full`}
-          key={`${feature}-${color}`}
-        >
-          <span className="text-neutral">{feature}</span>
-        </li>
-      ))}
-    </ul>
+    <div className="flex flex-wrap justify-center gap-3">
+      <a
+        className={`btn-info ${style}`}
+        href="https://github.com/kripple/klinky/blob/main/LICENSE"
+        rel="noreferrer"
+        target="_blank"
+      >
+        Free to use
+      </a>
+      <a
+        className={`btn-accent ${style}`}
+        href="https://github.com/kripple/klinky"
+        rel="noreferrer"
+        target="_blank"
+      >
+        Open source
+      </a>
+
+      {/* TODO: maybe a modal? */}
+      <button className={`btn-warning ${style}`}>No signup required</button>
+    </div>
   );
 }

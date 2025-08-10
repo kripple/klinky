@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { ErrorIndicator } from './ErrorIndicator';
+
 import { api } from '@/frontend/api';
 import { Input } from '@/frontend/components/Input';
 import { aliasPrefix, validateOptionalAlias } from '@/validators/alias';
@@ -87,7 +89,7 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
     link,
   }: {
     [key in 'alias' | 'link']: FormDataEntryValue | null;
-  }): CreateLinkParams | false => {
+  }) => {
     const aliasString = typeof alias === 'string' ? alias : '';
     const aliasResult = validateOptionalAlias(aliasString);
     if (!aliasResult.success) {
@@ -98,15 +100,15 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
     if (!linkResult.success) {
       setLinkErrors(linkResult.errors);
     }
-    if (!user_uuid || !(aliasResult.success && linkResult.success)) {
+    if (!(aliasResult.success && linkResult.success)) {
       return false;
     }
-    return { alias: aliasResult.data, value: linkResult.data, user_uuid };
+    return { alias: aliasResult.data, value: linkResult.data };
   };
 
   const submit = (event: FormEvent) => {
     event.preventDefault();
-    if (response.isLoading) return;
+    if (!user_uuid || maxLinks || response.isLoading) return;
 
     const data = new FormData(event.currentTarget);
     const params = parseForm({
@@ -114,7 +116,7 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
       link: data.get('link'),
     });
     if (!params) return;
-    createLink(params);
+    createLink({ ...params, user_uuid });
   };
 
   const checkmark = (
@@ -137,10 +139,11 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
   return (
     <form
       autoComplete="off"
-      className="card bg-base-100 shadow-md m-6 p-6 border border-primary-content"
+      className="card bg-base-100 shadow-md m-6 px-6 pt-6 border border-primary-content"
       onSubmit={submit}
     >
       <Input
+        disabled={maxLinks}
         errors={linkErrors}
         label={linkPrefix}
         name="link"
@@ -150,6 +153,7 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
         placeholder="Enter link here"
       />
       <Input
+        disabled={maxLinks}
         errors={aliasErrors}
         label={aliasPrefix}
         name="alias"
@@ -159,24 +163,36 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
         placeholder="Customize your link (optional)"
       />
 
-      <button
-        className={`btn ${success ? 'btn-success' : 'btn-primary'}`}
-        disabled={!user_uuid || maxLinks}
-        type="submit"
-      >
-        {success ? (
-          checkmark
-        ) : loading ? (
-          <span>Linking ...</span>
-        ) : (
-          <span>Create Short Link</span>
-        )}
-      </button>
-      {/* <p className="validator-hint">
-        {maxLinks
-          ? `There is a maximum of ${maxLinksPerUser} links per user, please delete a link before creating a new one.`
-          : null}
-      </p> */}
+      {maxLinks ? (
+        <ErrorIndicator show={true}>
+          <a
+            className="btn btn-primary w-full"
+            href={import.meta.env.VITE_FRONTEND_URL}
+            rel="noreferrer"
+            target="_blank"
+          >
+            Create New Page?
+          </a>
+        </ErrorIndicator>
+      ) : (
+        <button
+          className={`btn ${success ? 'btn-success' : 'btn-primary'} w-full`}
+          disabled={!user_uuid}
+          type="submit"
+        >
+          {success ? (
+            checkmark
+          ) : loading ? (
+            <span>Linking ...</span>
+          ) : (
+            <span>Create Short Link</span>
+          )}
+        </button>
+      )}
+
+      <p className="h-6 leading-6 text-error">
+        {maxLinks ? `There is a maximum of ${maxLinksPerUser} links.` : null}
+      </p>
     </form>
   );
 }

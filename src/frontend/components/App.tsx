@@ -26,6 +26,8 @@ export function App() {
   // const [showLinks, setShowLinks] = useState<boolean>(false);
   const [showLinks, setShowLinks] = useState<boolean>(true);
 
+  const [deleteLinks] = api.useDeleteLinksMutation();
+
   return (
     <>
       <Background />
@@ -43,11 +45,22 @@ export function App() {
             <Features />
           </section>
 
-          {showLinks && (links || [])?.length > 0 ? (
+          {showLinks ? (
             <aside className="card bg-base-100 shadow-md w-1/2 max-w-xl p-1 aside border border-primary-content">
               <Links links={links} />
               <div className="flex flex-grow items-end mx-2 mb-2 mt-1">
-                <button className="btn btn-secondary w-full">Delete All Links</button>
+                {uuid ? (
+                  <button
+                    className="btn btn-secondary w-full"
+                    onClick={() =>
+                      deleteLinks({
+                        user_uuid: uuid,
+                      })
+                    }
+                  >
+                    Delete All Links
+                  </button>
+                ) : null}
               </div>
             </aside>
           ) : null}
