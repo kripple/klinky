@@ -1,4 +1,10 @@
+import { useRef } from 'react';
+
+import { Dialog } from '@/frontend/components/Dialog';
+
 export function Features() {
+  const ref = useRef<HTMLDialogElement>(null);
+
   // TODO: handle broken links
 
   const style =
@@ -23,8 +29,16 @@ export function Features() {
         Open source
       </a>
 
-      {/* TODO: maybe a modal? */}
-      <button className={`btn-warning ${style}`}>No signup required</button>
+      {/* TODO */}
+      <Dialog closable dialogRef={ref}>
+        {`TODO: explanation that the links are related to the user_uuid (url), that there's no sign-in or sign-up, but anyone with that link will be able to edit or modify the links. It's security by obscurity, but it's not infallible, and sharing the link renders it meaningless. Provide a save-as-bookmark and/or copy-to-clipboard becuase after leaving the page, there's no way to return to it without knowing the URL. The app saves nothing by design. The ability to delete a user can live here (maybe?).`}
+      </Dialog>
+      <button
+        className={`btn-warning ${style}`}
+        onClick={() => ref?.current?.showModal()}
+      >
+        No signup required
+      </button>
     </div>
   );
 }
