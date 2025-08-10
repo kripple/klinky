@@ -14,7 +14,7 @@
     "e2e": "dotenvx run -f .env.development -- playwright test --config config/playwright.e2e-config.ts",
     "build": "npm run build:app && npm run build:api",
     "generate:db": "drizzle-kit generate --config config/drizzle.config.ts",
-    "migrate:db": "dotenvx run -f .env.development -- npm run deploy:db",
+    "deploy:dev:db": "dotenvx run -f .env.development -- npm run deploy:db",
     "deploy:db": "drizzle-kit migrate --config config/drizzle.config.ts",
     "start": "vite",
     "build:app": "tsc -p tsconfig.frontend.json && vite build",
