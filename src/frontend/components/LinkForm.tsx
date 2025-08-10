@@ -3,8 +3,7 @@ import { useCallback, useState } from 'react';
 import { api } from '@/frontend/api';
 import { CreateLinkForm } from '@/frontend/components/CreateLinkForm';
 import { useSortedLinks } from '@/frontend/hooks/useSortedLinks';
-import { validateOptionalAlias } from '@/validators/alias';
-import { linkPrefix, maxLinksPerUser, validateLink } from '@/validators/link';
+import { maxLinksPerUser } from '@/validators/link';
 
 export function LinkForm({ user_uuid }: { user_uuid?: string }) {
   const linksResponse = useSortedLinks({ user_uuid });

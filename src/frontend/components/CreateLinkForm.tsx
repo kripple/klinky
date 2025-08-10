@@ -1,5 +1,3 @@
-import { useEffect } from 'react';
-
 import { ErrorIndicator } from '@/frontend/components/ErrorIndicator';
 import { Input } from '@/frontend/components/Input';
 import { aliasPrefix, validateOptionalAlias } from '@/validators/alias';
