@@ -21,41 +21,37 @@ export function Input({
     'aria-invalid': invalid,
     autoComplete: 'off',
     autoCorrect: 'off',
-    className: 'grow',
+    className: `input ${invalid ? 'input-error' : 'input-primary'} w-full`,
+    placeholder: prefix,
     spellCheck: 'false',
     type: 'text',
   } as const;
-  const inputStyle = 'w-full gap-0 tracking-0 box-content';
+  const errorMessage = errors.join(', ');
 
   return (
     <>
-      <label className="label">{label}</label>
+      <span className="label">{label}:</span>
       <ErrorIndicator show={invalid}>
-        <label
-          className={`input ${inputStyle} ${invalid ? 'input-error' : 'input-primary'}`}
-        >
-          {prefix}
+        <label className="floating-label w-full">
           {disabled ? (
             <input
               {...inputProps}
-              className={inputStyle}
               disabled={true}
               key={`disabled-${name}`}
               name={`disabled-${name}`}
             />
           ) : (
-            <input
-              {...inputProps}
-              className={inputStyle}
-              key={name}
-              name={name}
-              onChange={onChange}
-            />
+            <input {...inputProps} key={name} name={name} onChange={onChange} />
           )}
+          <span>{prefix}</span>
         </label>
       </ErrorIndicator>
-
-      <p className="h-4 text-error font-bold text-left">{errors.join(', ')}</p>
+      <p
+        className="h-4 text-error font-bold text-left truncate"
+        title={errorMessage}
+      >
+        {errorMessage}
+      </p>
     </>
   );
 }
