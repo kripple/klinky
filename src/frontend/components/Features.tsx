@@ -11,7 +11,7 @@ export function Features() {
     'btn btn-outline bg-base-100 rounded-full font-normal text-neutral px-3 h-7' as const;
 
   return (
-    <div className="flex flex-wrap justify-center gap-3">
+    <div className="flex flex-wrap justify-center gap-3 px-6">
       <a
         className={`btn-info ${style}`}
         href="https://github.com/kripple/klinky/blob/main/LICENSE"

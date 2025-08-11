@@ -17,9 +17,7 @@ export function ShowLinksButton({
   const contents = (
     <>
       Links
-      <span
-        className={`badge badge-accent aspect-square rounded-full font-bold p-1 m-0 h-auto flex lg:hidden`}
-      >
+      <span className="badge badge-accent aspect-square rounded-full font-bold p-1 m-0 h-auto flex lg:hidden">
         <ArrowDown />
       </span>
       <span

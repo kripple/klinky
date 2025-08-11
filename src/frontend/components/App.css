@@ -18,8 +18,15 @@ body {
 }
 
 .main {
-  height: calc(100vh - (2 * var(--header-height)));
-  margin-bottom: var(--header-height);
+  height: calc(100vh - (var(--golden-ratio) * var(--header-height)));
+  margin-bottom: calc(var(--header-height) / var(--golden-ratio));
+}
+
+@media screen and (min-width: 640px) {
+  .main {
+    height: calc(100vh - (2 * var(--header-height)));
+    margin-bottom: var(--header-height);
+  }
 }
 
 .links-card {

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { FaArrowUp as ArrowUp } from 'react-icons/fa6';
 
 import { api } from '@/frontend/api';
 import { Background } from '@/frontend/components/Background';
@@ -22,13 +23,31 @@ export function App() {
   const linksResponse = useSortedLinks({ user_uuid: uuid });
   const links = linksResponse.currentData;
 
-  // const [showLinks, setShowLinks] = useState<boolean>(false);
-  const [showLinks, setShowLinks] = useState<boolean>(true);
+  const [showLinks, setShowLinks] = useState<boolean>(false);
 
   const [deleteLinks] = api.useDeleteLinksMutation();
 
-  const linksComponent = <Links links={links} />;
+  const linksComponent = (
+    <>
+      <Links links={links} />
+      <div className="flex flex-grow items-end mx-2 mb-2 mt-1">
+        {uuid ? (
+          <button
+            className="btn btn-secondary w-full"
+            onClick={() =>
+              deleteLinks({
+                user_uuid: uuid,
+              })
+            }
+          >
+            Delete All Links
+          </button>
+        ) : null}
+      </div>
+    </>
+  );
 
+  const appRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLElement>(null);
 
   return (
@@ -40,7 +59,10 @@ export function App() {
         <p className="py-4">An error has occurred, please try again.</p>
       </Dialog>
 
-      <div className="flex flex-col min-h-[200vh] lg:min-h-screen app">
+      <div
+        className="flex flex-col min-h-[200vh] lg:min-h-screen app"
+        ref={appRef}
+      >
         <Header
           links={links}
           scrollRef={scrollRef}
@@ -56,46 +78,26 @@ export function App() {
           </section>
 
           {showLinks ? (
-            <aside className="hidden lg:card bg-base-100 shadow-md w-1/2 max-w-xl p-1 links-card border border-primary-content">
+            <aside className="hidden lg:flex card bg-base-100 shadow-md w-1/2 max-w-xl p-1 links-card border border-primary-content">
               {linksComponent}
-              <div className="flex flex-grow items-end mx-2 mb-2 mt-1">
-                {uuid ? (
-                  <button
-                    className="btn btn-secondary w-full"
-                    onClick={() =>
-                      deleteLinks({
-                        user_uuid: uuid,
-                      })
-                    }
-                  >
-                    Delete All Links
-                  </button>
-                ) : null}
-              </div>
             </aside>
           ) : null}
         </main>
 
         <aside
-          className="lg:hidden flex shrink-0 items-center justify-center h-screen max-h-screen w-full p-6"
+          className="flex lg:hidden shrink-0 items-center justify-center h-screen max-h-screen w-full p-4 sm:p-6 relative"
           ref={scrollRef}
         >
+          <button
+            className="btn badge badge-primary aspect-square rounded-full font-bold p-3 m-0 h-auto absolute top-1 right-1 sm:top-3 sm:right-3 z-10"
+            onClick={() =>
+              appRef?.current?.scrollIntoView({ behavior: 'smooth' })
+            }
+          >
+            <ArrowUp />
+          </button>
           <section className="card links-card bg-base-100 shadow-md border border-primary-content w-full max-w-3xl">
             {linksComponent}
-            <div className="flex flex-grow items-end mx-2 mb-2 mt-1">
-              {uuid ? (
-                <button
-                  className="btn btn-secondary w-full"
-                  onClick={() =>
-                    deleteLinks({
-                      user_uuid: uuid,
-                    })
-                  }
-                >
-                  Delete All Links
-                </button>
-              ) : null}
-            </div>
           </section>
         </aside>
 
