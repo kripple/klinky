@@ -86,53 +86,55 @@ export function CreateLinkForm({
       className="card bg-base-100 shadow-md px-6 pt-6 border border-primary-content"
       onSubmit={submit}
     >
-      <Input
-        disabled={disabled}
-        errors={linkErrors}
-        label={linkPrefix}
-        name="link"
-        onChange={() =>
-          setLinkErrors((current) => (current.length === 0 ? current : []))
-        }
-        placeholder="Enter link here"
-      />
-      <Input
-        disabled={disabled}
-        errors={aliasErrors}
-        label={aliasPrefix}
-        name="alias"
-        onChange={() =>
-          setAliasErrors((current) => (current.length === 0 ? current : []))
-        }
-        placeholder="Customize your link (optional)"
-      />
+      <fieldset className="fieldset">
+        <Input
+          disabled={disabled}
+          errors={linkErrors}
+          label="Enter link here"
+          name="link"
+          onChange={() =>
+            setLinkErrors((current) => (current.length === 0 ? current : []))
+          }
+          prefix={linkPrefix}
+        />
+        <Input
+          disabled={disabled}
+          errors={aliasErrors}
+          label="Customize your link (optional)"
+          name="alias"
+          onChange={() =>
+            setAliasErrors((current) => (current.length === 0 ? current : []))
+          }
+          prefix={aliasPrefix}
+        />
 
-      {disabled && !loading ? (
-        <ErrorIndicator show={true}>
-          <a
-            className="btn btn-primary w-full"
-            href={import.meta.env.VITE_FRONTEND_URL}
-            rel="noreferrer"
-            target="_blank"
+        {disabled && !loading ? (
+          <ErrorIndicator show={true}>
+            <a
+              className="btn btn-primary w-full"
+              href={import.meta.env.VITE_FRONTEND_URL}
+              rel="noreferrer"
+              target="_blank"
+            >
+              Create New Page?
+            </a>
+          </ErrorIndicator>
+        ) : (
+          <button
+            className={`btn ${success ? 'btn-success' : 'btn-primary'} w-full`}
+            disabled={!user_uuid}
+            type="submit"
           >
-            Create New Page?
-          </a>
-        </ErrorIndicator>
-      ) : (
-        <button
-          className={`btn ${success ? 'btn-success' : 'btn-primary'} w-full`}
-          disabled={!user_uuid}
-          type="submit"
-        >
-          {success ? (
-            checkmark
-          ) : loading ? (
-            <span>Linking ...</span>
-          ) : (
-            <span>Create Short Link</span>
-          )}
-        </button>
-      )}
+            {success ? (
+              checkmark
+            ) : loading ? (
+              <span>Linking ...</span>
+            ) : (
+              <span>Create Short Link</span>
+            )}
+          </button>
+        )}
+      </fieldset>
 
       <p className="h-6 leading-6 text-error">{disabled ? error : null}</p>
     </form>

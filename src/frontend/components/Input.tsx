@@ -1,22 +1,21 @@
 import { ErrorIndicator } from '@/frontend/components/ErrorIndicator';
 
 export function Input({
-  label,
+  prefix,
   name,
-  placeholder,
+  label,
   errors,
   disabled,
   onChange,
 }: {
-  label: string;
+  prefix: string;
   name: string;
-  placeholder: string;
+  label: string;
   errors: string[];
   disabled?: boolean;
   onChange?: () => void;
 }) {
   const invalid = errors.length > 0;
-  const contentLength = label.length + placeholder.length;
   const inputProps = {
     'aria-errormessage': errors.join(', '),
     'aria-invalid': invalid,
@@ -26,60 +25,37 @@ export function Input({
     spellCheck: 'false',
     type: 'text',
   } as const;
+  const inputStyle = 'w-full gap-0 tracking-0 box-content';
 
   return (
     <>
-      {/* <span className="sm:hidden">
-        <label className="text-left font-bold p-1">{placeholder}:</label>
-        <ErrorIndicator show={invalid}>
-          {disabled ? (
-            <input
-              {...inputProps}
-              className={`input w-full gap-0 tracking-0 box-content ${invalid ? 'input-error' : 'input-primary'}`}
-              disabled={true}
-              key={`disabled-${name}`}
-              name={`disabled-${name}`}
-              placeholder={label}
-            />
-          ) : (
-            <input
-              {...inputProps}
-              className={`input w-full gap-0 tracking-0 box-content ${invalid ? 'input-error' : 'input-primary'}`}
-              key={name}
-              name={name}
-              onChange={onChange}
-              placeholder={label}
-            />
-          )}
-        </ErrorIndicator>
-      </span> */}
-
+      <label className="label">{label}</label>
       <ErrorIndicator show={invalid}>
         <label
-          className={`input w-full gap-0 tracking-0 box-content min-w-[${contentLength}ch] ${invalid ? 'input-error' : 'input-primary'}`}
+          className={`input ${inputStyle} ${invalid ? 'input-error' : 'input-primary'}`}
         >
-          {label}
+          {prefix}
           {disabled ? (
             <input
               {...inputProps}
+              className={inputStyle}
               disabled={true}
               key={`disabled-${name}`}
               name={`disabled-${name}`}
-              placeholder={placeholder}
             />
           ) : (
             <input
-              key={name}
               {...inputProps}
+              className={inputStyle}
+              key={name}
               name={name}
               onChange={onChange}
-              placeholder={placeholder}
             />
           )}
         </label>
       </ErrorIndicator>
 
-      <p className="h-6 leading-6 text-error">{errors.join(', ')}</p>
+      <p className="h-4 text-error font-bold text-left">{errors.join(', ')}</p>
     </>
   );
 }

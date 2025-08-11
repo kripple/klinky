@@ -5,10 +5,10 @@ export function Headings() {
         aria-label="The anti-lytics Link Shortener"
         className="flex flex-col gap-1 sm:gap-4 px-6"
       >
-        <span className="text-2xl sm:text-5xl text-neutral">
+        <span className="text-2xl sm:text-5xl text-neutral whitespace-nowrap">
           The anti-lytics
         </span>
-        <span className="text-3xl sm:text-6xl text-primary">
+        <span className="text-3xl sm:text-6xl text-primary whitespace-nowrap">
           Link Shortener
         </span>
       </h1>
