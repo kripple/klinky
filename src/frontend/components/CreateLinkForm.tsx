@@ -1,24 +1,9 @@
+import { FaCheck as CheckmarkIcon } from 'react-icons/fa6';
+
 import { ErrorIndicator } from '@/frontend/components/ErrorIndicator';
 import { Input } from '@/frontend/components/Input';
 import { aliasPrefix, validateOptionalAlias } from '@/validators/alias';
 import { linkPrefix, validateLink } from '@/validators/link';
-
-const checkmark = (
-  <svg
-    className="w-5 h-5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      d="M5 13l4 4L19 7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={3}
-    />
-  </svg>
-);
 
 export function CreateLinkForm({
   loading,
@@ -131,7 +116,7 @@ export function CreateLinkForm({
             type="submit"
           >
             {success ? (
-              checkmark
+              <CheckmarkIcon />
             ) : loading ? (
               <span>Linking ...</span>
             ) : (

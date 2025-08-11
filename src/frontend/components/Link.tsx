@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { FiEdit2 as EditIcon } from 'react-icons/fi';
-import { LuCopy as CopyIcon } from 'react-icons/lu';
 import { MdOutlineDeleteOutline as DeleteIcon } from 'react-icons/md';
 
 import { api } from '@/frontend/api';
+import { CopyButton } from '@/frontend/components/CopyButton';
 import { relativeTime } from '@/frontend/utils/time';
-import { aliasDisplayPrefix } from '@/validators/alias';
+import { aliasDisplayPrefix, aliasPrefix } from '@/validators/alias';
 
 export function Link(link: LinkDto) {
   const [deleteLink, response] = api.useDeleteLinkMutation();
@@ -53,10 +53,10 @@ export function Link(link: LinkDto) {
         </time>
 
         <div className="flex gap-1 mt-1">
-          <button className={`btn-info ${buttonStyle}`}>
-            <CopyIcon />
-            Copy
-          </button>
+          <CopyButton
+            buttonStyle={buttonStyle}
+            text={aliasPrefix + link.alias}
+          />
 
           {/* change link into textbox */}
           <button
