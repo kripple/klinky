@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { api } from '@/frontend/api';
 import { CreateLinkForm } from '@/frontend/components/CreateLinkForm';
@@ -14,7 +14,9 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
   const [aliasErrors, setAliasErrors] = useState<string[]>([]);
   const [linkErrors, setLinkErrors] = useState<string[]>([]);
   const [requestKey, setRequestKey] = useState<number>(0);
+
   const delayMs = 800 as const;
+  const timeoutHandler = useRef<NodeJS.Timeout | null>(null);
 
   const [createLink, response] = api.useCreateLinkMutation({
     fixedCacheKey: requestKey.toString(),
@@ -25,7 +27,7 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
       createLink(params)
         .unwrap()
         .then(() => {
-          setTimeout(() => {
+          timeoutHandler.current = setTimeout(() => {
             setRequestKey((current) => current + 1);
           }, delayMs);
         })
@@ -35,6 +37,13 @@ export function LinkForm({ user_uuid }: { user_uuid?: string }) {
         });
     },
     [createLink],
+  );
+
+  useEffect(
+    () => () => {
+      timeoutHandler.current && clearTimeout(timeoutHandler.current);
+    },
+    [],
   );
 
   return (
