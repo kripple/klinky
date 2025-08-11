@@ -6,7 +6,7 @@ html,
 body,
 #root,
 .app {
-  height: 100vh;
+  height: var(--app-height);
 }
 
 body {
@@ -19,9 +19,10 @@ body {
 
 .main {
   height: calc(100vh - (2 * var(--header-height)));
+  margin-bottom: var(--header-height);
 }
 
-.aside {
+.links-card {
   height: 100%;
   overflow-y: scroll;
 }
@@ -29,4 +30,8 @@ body {
 .klinky-link {
   text-decoration-thickness: 2px;
   text-underline-offset: 1.5px;
+}
+
+button * {
+  cursor: inherit;
 }

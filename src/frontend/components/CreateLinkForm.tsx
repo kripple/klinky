@@ -83,7 +83,7 @@ export function CreateLinkForm({
   return (
     <form
       autoComplete="off"
-      className="card bg-base-100 shadow-md m-6 px-6 pt-6 border border-primary-content"
+      className="card bg-base-100 shadow-md m-2 px-6 pt-6 border border-primary-content"
       onSubmit={submit}
     >
       <Input

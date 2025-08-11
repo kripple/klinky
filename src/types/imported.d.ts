@@ -13,4 +13,8 @@ declare type ClickEvent = import('@/types/events').ReactMouseEvent<
 
 declare type ReactNode = import('@/types/react').ReactNodeType;
 
+declare type Ref<T> = import('@/types/react').ReactRef<T>;
+
+declare type RefObject = import('@/types/react').ReactRefObject<HTMLElement | null>
+
 declare type SetState<T> = import('@/types/react').SetState<T>;

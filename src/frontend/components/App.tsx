@@ -27,6 +27,10 @@ export function App() {
 
   const [deleteLinks] = api.useDeleteLinksMutation();
 
+  const linksComponent = <Links links={links} />;
+
+  const scrollRef = useRef<HTMLElement>(null);
+
   return (
     <>
       <Background />
@@ -36,14 +40,15 @@ export function App() {
         <p className="py-4">An error has occurred, please try again.</p>
       </Dialog>
 
-      <div className="flex flex-col min-h-screen app">
+      <div className="flex flex-col min-h-[200vh] lg:min-h-screen app">
         <Header
           links={links}
+          scrollRef={scrollRef}
           setShowLinks={setShowLinks}
           showLinks={showLinks}
         />
 
-        <main className="flex items-center justify-center px-2 main relative w-screen">
+        <main className="flex shrink-0 items-center justify-center px-2 main relative w-screen">
           <section className="flex flex-col w-xl text-center gap-6">
             <Headings />
             <LinkForm user_uuid={uuid} />
@@ -51,8 +56,8 @@ export function App() {
           </section>
 
           {showLinks ? (
-            <aside className="card bg-base-100 shadow-md w-1/2 max-w-xl p-1 aside border border-primary-content">
-              <Links links={links} />
+            <aside className="hidden lg:card bg-base-100 shadow-md w-1/2 max-w-xl p-1 links-card border border-primary-content">
+              {linksComponent}
               <div className="flex flex-grow items-end mx-2 mb-2 mt-1">
                 {uuid ? (
                   <button
@@ -70,6 +75,29 @@ export function App() {
             </aside>
           ) : null}
         </main>
+
+        <aside
+          className="lg:hidden flex shrink-0 items-center justify-center h-screen max-h-screen w-full p-6"
+          ref={scrollRef}
+        >
+          <section className="card links-card bg-base-100 shadow-md border border-primary-content w-full max-w-3xl">
+            {linksComponent}
+            <div className="flex flex-grow items-end mx-2 mb-2 mt-1">
+              {uuid ? (
+                <button
+                  className="btn btn-secondary w-full"
+                  onClick={() =>
+                    deleteLinks({
+                      user_uuid: uuid,
+                    })
+                  }
+                >
+                  Delete All Links
+                </button>
+              ) : null}
+            </div>
+          </section>
+        </aside>
 
         {/* <Footer /> */}
       </div>

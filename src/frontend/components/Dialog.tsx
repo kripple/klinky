@@ -1,5 +1,3 @@
-import type { Ref } from 'react';
-
 export function Dialog({
   children,
   closable,
