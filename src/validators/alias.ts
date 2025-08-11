@@ -117,6 +117,7 @@ const isReserved = (alias: string) =>
     'signup',
     'site',
     'sw',
+    'test',
     'user',
     'users',
     'webmanifest',

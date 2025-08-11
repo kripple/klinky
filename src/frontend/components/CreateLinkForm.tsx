@@ -43,6 +43,13 @@ export function CreateLinkForm({
 }) {
   const disabled = Boolean(error);
 
+  function addUrlPrefix(url: string): string {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `https://${url}`;
+  }
+
   const parseForm = ({
     alias,
     link,
@@ -55,7 +62,7 @@ export function CreateLinkForm({
       setAliasErrors(aliasResult.errors);
     }
     const linkString = typeof link === 'string' ? link : '';
-    const linkResult = validateLink(linkPrefix + linkString);
+    const linkResult = validateLink(addUrlPrefix(linkString));
     if (!linkResult.success) {
       setLinkErrors(linkResult.errors);
     }
@@ -64,8 +71,6 @@ export function CreateLinkForm({
     }
     return { alias: aliasResult.data, value: linkResult.data };
   };
-
-  // TODO: sort links, most recent at top
 
   const submit = (event: FormEvent) => {
     event.preventDefault();

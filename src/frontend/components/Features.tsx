@@ -1,33 +1,28 @@
 import { useRef } from 'react';
 
 import { Dialog } from '@/frontend/components/Dialog';
+import { ExternalUrl } from '@/frontend/components/ExternalUrl';
 
 export function Features() {
   const ref = useRef<HTMLDialogElement>(null);
-
-  // TODO: handle broken links
-
   const style =
     'btn btn-outline bg-base-100 rounded-full font-normal text-neutral px-3 h-7' as const;
 
   return (
     <div className="flex flex-wrap justify-center gap-3 px-6">
-      <a
-        className={`btn-info ${style}`}
-        href="https://github.com/kripple/klinky/blob/main/LICENSE"
-        rel="noreferrer"
-        target="_blank"
+      <ExternalUrl
+        linkStyle={`btn-info ${style}`}
+        url="https://github.com/kripple/klinky/blob/main/LICENSE"
       >
         Free to use
-      </a>
-      <a
-        className={`btn-accent ${style}`}
-        href="https://github.com/kripple/klinky"
-        rel="noreferrer"
-        target="_blank"
+      </ExternalUrl>
+
+      <ExternalUrl
+        linkStyle={`btn-accent ${style}`}
+        url="https://github.com/kripple/klinky"
       >
         Open source
-      </a>
+      </ExternalUrl>
 
       {/* TODO */}
       <Dialog closable dialogRef={ref}>
