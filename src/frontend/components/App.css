@@ -32,9 +32,3 @@ body {
   text-underline-offset: 1.5px;
 }
 
-button * {
-  align-items: inherit;
-  cursor: inherit;
-  display: inherit;
-  gap: inherit;
-}
