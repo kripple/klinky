@@ -39,3 +39,18 @@ body {
 .list-row.outline::after {
   display: none;
 }
+
+.grid-alignment {
+  grid-auto-flow: column;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr min-content;
+}
+
+.grid-top {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+
+.grid-bottom {
+  align-self: end;
+}

@@ -1,48 +1,77 @@
-import { useState } from 'react';
-import {
-  FaCheck as CheckmarkIcon,
-  FaRegCircleCheck as SubmitIcon,
-} from 'react-icons/fa6';
-import { FiEdit2 as EditIcon } from 'react-icons/fi';
+import { useEffect, useState } from 'react';
+import { FaRegCircleCheck as SubmitIcon } from 'react-icons/fa6';
 import { LuPenOff as ResetIcon } from 'react-icons/lu';
 
-// import { LuUndo as ResetIcon } from 'react-icons/lu';
-// import { IoArrowUndoOutline as ResetIcon } from 'react-icons/io5';
-import { MdOutlineDeleteOutline as DeleteIcon } from 'react-icons/md';
-// import { RxReset as ResetIcon } from 'react-icons/rx';
-
 import { api } from '@/frontend/api';
-import { CopyButton } from '@/frontend/components/CopyButton';
-import { ErrorIndicator } from '@/frontend/components/ErrorIndicator';
 import { Input } from '@/frontend/components/Input';
-import { relativeTime } from '@/frontend/utils/time';
-import {
-  aliasDisplayPrefix,
-  aliasPrefix,
-  validateOptionalAlias,
-} from '@/validators/alias';
-import { linkPrefix, validateLink } from '@/validators/link';
+import { aliasPrefix, validateAlias } from '@/validators/alias';
 
 export function EditLinkForm({
   setIsEditing,
-  ...link
+  alias,
+  user_uuid,
+  uuid: link_uuid,
 }: LinkDto & { setIsEditing: SetState<boolean> }) {
   const [errors, setErrors] = useState<string[]>([]);
   const errorMessage = errors.join(', ');
   const buttonStyle = 'btn btn-outline btn-sm aspect-square text-lg p-0';
 
+  const [updateLink, response] = api.useUpdateLinkMutation();
+
+  const disabled = errors.length > 0;
+  const loading = response.isLoading;
+  const success = response.isSuccess;
+
+  useEffect(() => {
+    if (!success) return;
+    setIsEditing(false);
+  }, [success, setIsEditing]);
+
+  const parseForm = ({
+    alias,
+  }: {
+    [key in 'alias']: FormDataEntryValue | null;
+  }) => {
+    const aliasString = typeof alias === 'string' ? alias : '';
+    const aliasResult = validateAlias(aliasString);
+    if (!aliasResult.success) {
+      setErrors(aliasResult.errors);
+    }
+    if (!aliasResult.success) {
+      return false;
+    }
+    return { alias: aliasResult.data };
+  };
+
   const submit = (event: FormEvent) => {
     event.preventDefault();
 
-    console.log(link);
+    if (!user_uuid || !link_uuid || disabled || loading) return;
+
+    const data = new FormData(event.currentTarget);
+    const alias = data.get('alias');
+
+    // escape hatch for empty inputs
+    if (alias === '') {
+      setIsEditing(false);
+      return;
+    }
+
+    const params = parseForm({
+      alias,
+    });
+    if (!params) return;
+    updateLink({ ...params, user_uuid, link_uuid });
   };
 
   return (
-    <div className="flex items-center absolute bg-base-100 pb-2 w-full">
+    // FIXME: don't use absolute or invisible, just replace and set a min-height on the error message
+    <div className="grid-top relative z-10">
       <form autoComplete="off" className="w-full" onSubmit={submit}>
         <div className="flex flex-nowrap items-center gap-2">
           <fieldset className="fieldset grow">
             <Input
+              defaultValue={alias}
               errors={errors}
               name="alias"
               onChange={() =>
@@ -60,40 +89,15 @@ export function EditLinkForm({
           >
             <ResetIcon />
           </button>
-          <button
-            className={`btn-success ${buttonStyle}`}
-            onClick={submit}
-            type="submit"
-          >
+          <button className={`btn-success ${buttonStyle}`} type="submit">
             <SubmitIcon />
           </button>
         </div>
 
-        <p
-          className="h-4 text-error font-bold text-left truncate"
-          title={errorMessage}
-        >
+        <p className="min-h-6 text-error text-xs text-left font-bold">
           {errorMessage}
         </p>
       </form>
     </div>
   );
-
-  // return (
-  //   <>
-  //     <label className="text-lg font-bold">
-  //       {aliasDisplayPrefix}
-  //       <input
-  //         autoComplete="off"
-  //         autoCorrect="off"
-  //         className="text-lg font-bold input input-xs p-0"
-  //         name="alias"
-  //         placeholder={link.alias}
-  //         spellCheck="false"
-  //         type="text"
-  //       />
-  //     </label>
-  //     <p className="h-6 leading-6 text-error">{errors.join(', ')}</p>
-  //   </>
-  // );
 }

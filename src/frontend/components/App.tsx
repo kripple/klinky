@@ -27,6 +27,8 @@ export function App() {
 
   const [deleteLinks] = api.useDeleteLinksMutation();
 
+  const linksCardStyle =
+    'card links-card bg-base-100 shadow-md border border-primary-content p-1';
   const linksComponent = (
     <>
       <Links links={links} />
@@ -78,7 +80,9 @@ export function App() {
           </section>
 
           {showLinks ? (
-            <aside className="hidden lg:flex card bg-base-100 shadow-md w-1/2 max-w-xl p-1 links-card border border-primary-content">
+            <aside
+              className={`hidden lg:flex w-1/2 max-w-xl ${linksCardStyle}`}
+            >
               {linksComponent}
             </aside>
           ) : null}
@@ -89,14 +93,14 @@ export function App() {
           ref={scrollRef}
         >
           <button
-            className="btn badge badge-primary aspect-square rounded-full font-bold p-3 m-0 h-auto absolute top-1 right-1 sm:top-3 sm:right-3 z-10"
+            className="btn badge badge-primary aspect-square rounded-full font-bold p-3 m-0 h-auto absolute top-1 right-1 sm:top-3 sm:right-3 z-100"
             onClick={() =>
               appRef?.current?.scrollIntoView({ behavior: 'smooth' })
             }
           >
             <ArrowUp />
           </button>
-          <section className="card links-card bg-base-100 shadow-md border border-primary-content w-full max-w-3xl">
+          <section className={`w-full max-w-3xl ${linksCardStyle}`}>
             {linksComponent}
           </section>
         </aside>

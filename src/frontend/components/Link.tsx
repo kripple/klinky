@@ -17,37 +17,41 @@ export function Link(link: LinkDto) {
   const invalid = errors.length > 0;
 
   return (
-    <li className={`list-row px-3 py-2 ${isEditing ? 'outline outline-primary-content shadow-md' : ''}`} key={link.uuid}>
-      <div
-        className={`list-col-grow relative`.trimEnd()}
-      >
+    <li
+      className={`list-row px-3 py-2 ${isEditing ? 'outline outline-primary-content shadow-md' : ''}`.trimEnd()}
+      key={link.uuid}
+    >
+      <div className={`list-col-grow relative grid grid-alignment`}>
         {isEditing ? (
           <EditLinkForm {...link} setIsEditing={setIsEditing} />
         ) : null}
 
-        <a
-          className="klinky-link link link-hover text-lg font-bold"
-          href={href}
-          rel="noreferrer"
-          target="_blank"
+        <span
+          className={`grid-top relative z-0 ${isEditing ? 'invisible pointer-event-none' : ''}`}
         >
-          {href}
-        </a>
+          <a
+            className={`klinky-link link link-hover text-lg font-bold`}
+            href={href}
+            rel="noreferrer"
+            target="_blank"
+          >
+            {href}
+          </a>
 
-        <p className="text-xs text-accent">{link.value}</p>
+          <p className={`text-xs text-accent`}>{link.value}</p>
 
-        <time className="text-xs" dateTime={link.updated_at}>
-          {relativeTime(link.updated_at)}
-        </time>
+          <time className={`text-xs`} dateTime={link.updated_at}>
+            {relativeTime(link.updated_at)}
+          </time>
+        </span>
 
-        <div className="flex gap-1 mt-1">
+        <div className="flex gap-1 mt-1 grid-bottom">
           <CopyButton
             buttonStyle={buttonStyle}
             disabled={isEditing}
             text={aliasPrefix + link.alias}
           />
 
-          {/* change link into textbox */}
           <button
             className={`btn-warning ${buttonStyle}`}
             disabled={isEditing}

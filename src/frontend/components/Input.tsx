@@ -7,6 +7,7 @@ export function Input({
   errors,
   disabled,
   removeHelperText,
+  defaultValue,
   onChange,
 }: {
   prefix: string;
@@ -15,6 +16,7 @@ export function Input({
   errors: string[];
   disabled?: boolean;
   removeHelperText?: boolean;
+  defaultValue?: string;
   onChange?: () => void;
 }) {
   const invalid = errors.length > 0;
@@ -43,7 +45,13 @@ export function Input({
               name={`disabled-${name}`}
             />
           ) : (
-            <input {...inputProps} key={name} name={name} onChange={onChange} />
+            <input
+              {...inputProps}
+              defaultValue={defaultValue}
+              key={name}
+              name={name}
+              onChange={onChange}
+            />
           )}
           <span>{prefix}</span>
         </label>

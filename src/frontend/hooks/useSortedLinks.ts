@@ -9,7 +9,7 @@ export const useSortedLinks = ({ user_uuid }: { user_uuid?: string }) => {
         ...result,
         currentData: currentData
           ? [...currentData].sort((a, b) =>
-              a.updated_at < b.updated_at ? 1 : -1,
+              a.created_at < b.created_at ? 1 : -1,
             )
           : [],
       }),
