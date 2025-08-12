@@ -44,7 +44,7 @@ export function CopyButton({
         setClickCount((current) => current + 1);
       }}
     >
-      <span className={`${hasCopiedText ? 'invisible' : ''}`}>
+      <span className={`flex items-center gap-inherit ${hasCopiedText ? 'invisible' : ''}`.trimEnd()}>
         <CopyIcon />
         Copy
       </span>

@@ -32,3 +32,6 @@ body {
   text-underline-offset: 1.5px;
 }
 
+.gap-inherit {
+  gap: inherit;
+}
