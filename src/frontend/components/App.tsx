@@ -70,7 +70,7 @@ export function App() {
           showLinks={showLinks}
         />
 
-        <main className="flex shrink-0 items-center justify-center p-2 main relative w-screen">
+        <main className="flex shrink-0 items-center justify-center p-2 main relative w-screen gap-2">
           <section className="flex flex-col w-md sm:w-xl text-center gap-6">
             <Headings />
             <LinkForm user_uuid={uuid} />

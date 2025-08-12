@@ -6,13 +6,15 @@ export function Input({
   label,
   errors,
   disabled,
+  removeHelperText,
   onChange,
 }: {
   prefix: string;
   name: string;
-  label: string;
+  label?: string;
   errors: string[];
   disabled?: boolean;
+  removeHelperText?: boolean;
   onChange?: () => void;
 }) {
   const invalid = errors.length > 0;
@@ -21,7 +23,7 @@ export function Input({
     'aria-invalid': invalid,
     autoComplete: 'off',
     autoCorrect: 'off',
-    className: `input ${invalid ? 'input-error' : 'input-primary'} w-full`,
+    className: `input ${invalid ? 'input-error' : 'input-primary'} w-full input-sm`,
     placeholder: prefix,
     spellCheck: 'false',
     type: 'text',
@@ -30,7 +32,7 @@ export function Input({
 
   return (
     <>
-      <span className="label">{label}:</span>
+      {label ? <span className="label">{label}:</span> : null}
       <ErrorIndicator show={invalid}>
         <label className="floating-label w-full">
           {disabled ? (
@@ -46,12 +48,14 @@ export function Input({
           <span>{prefix}</span>
         </label>
       </ErrorIndicator>
-      <p
-        className="h-4 text-error font-bold text-left truncate"
-        title={errorMessage}
-      >
-        {errorMessage}
-      </p>
+      {removeHelperText ? null : (
+        <p
+          className="h-4 text-error font-bold text-left truncate"
+          title={errorMessage}
+        >
+          {errorMessage}
+        </p>
+      )}
     </>
   );
 }

@@ -4,6 +4,7 @@ import { MdOutlineDeleteOutline as DeleteIcon } from 'react-icons/md';
 
 import { api } from '@/frontend/api';
 import { CopyButton } from '@/frontend/components/CopyButton';
+import { EditLinkForm } from '@/frontend/components/EditLinkForm';
 import { relativeTime } from '@/frontend/utils/time';
 import { aliasDisplayPrefix, aliasPrefix } from '@/validators/alias';
 
@@ -16,36 +17,23 @@ export function Link(link: LinkDto) {
   const invalid = errors.length > 0;
 
   return (
-    <li className="list-row border-primary-content px-3 py-2" key={link.uuid}>
-      <div className="list-col-grow">
+    <li className={`list-row px-3 py-2 ${isEditing ? 'outline outline-primary-content shadow-md' : ''}`} key={link.uuid}>
+      <div
+        className={`list-col-grow relative`.trimEnd()}
+      >
         {isEditing ? (
-          <>
-            <label className="text-lg font-bold ">
-              {aliasDisplayPrefix}
-              <input
-                autoComplete="off"
-                autoCorrect="off"
-                className="text-lg font-bold input input-xs p-0"
-                name="alias"
-                placeholder={link.alias}
-                spellCheck="false"
-                type="text"
-              />
-            </label>
-            <p className="h-6 leading-6 text-error">{errors.join(', ')}</p>
-          </>
-        ) : (
-          <>
-            <a
-              className="klinky-link link link-hover text-lg font-bold"
-              href={href}
-              rel="noreferrer"
-              target="_blank"
-            >
-              {href}
-            </a>
-          </>
-        )}
+          <EditLinkForm {...link} setIsEditing={setIsEditing} />
+        ) : null}
+
+        <a
+          className="klinky-link link link-hover text-lg font-bold"
+          href={href}
+          rel="noreferrer"
+          target="_blank"
+        >
+          {href}
+        </a>
+
         <p className="text-xs text-accent">{link.value}</p>
 
         <time className="text-xs" dateTime={link.updated_at}>
@@ -55,12 +43,14 @@ export function Link(link: LinkDto) {
         <div className="flex gap-1 mt-1">
           <CopyButton
             buttonStyle={buttonStyle}
+            disabled={isEditing}
             text={aliasPrefix + link.alias}
           />
 
           {/* change link into textbox */}
           <button
             className={`btn-warning ${buttonStyle}`}
+            disabled={isEditing}
             onClick={() => setIsEditing(true)}
           >
             <EditIcon />

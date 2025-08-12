@@ -35,3 +35,7 @@ body {
 .gap-inherit {
   gap: inherit;
 }
+
+.list-row.outline::after {
+  display: none;
+}

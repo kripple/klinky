@@ -5,9 +5,11 @@ import { LuCopy as CopyIcon } from 'react-icons/lu';
 
 export function CopyButton({
   buttonStyle,
+  disabled,
   text,
 }: {
   buttonStyle: string;
+  disabled: boolean;
   text: string;
 }) {
   const [clickCount, setClickCount] = useState<number>(0);
@@ -39,12 +41,15 @@ export function CopyButton({
   return (
     <button
       className={`${hasCopiedText ? 'btn-success' : 'btn-info'} ${buttonStyle}`}
+      disabled={disabled}
       onClick={() => {
         copyToClipboard(text);
         setClickCount((current) => current + 1);
       }}
     >
-      <span className={`flex items-center gap-inherit ${hasCopiedText ? 'invisible' : ''}`.trimEnd()}>
+      <span
+        className={`flex items-center gap-inherit ${hasCopiedText ? 'invisible' : ''}`.trimEnd()}
+      >
         <CopyIcon />
         Copy
       </span>
