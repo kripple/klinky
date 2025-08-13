@@ -8,9 +8,9 @@ import { aliasPrefix, validateAlias } from '@/validators/alias';
 
 export function EditLinkForm({
   setIsEditing,
-  alias,
   user_uuid,
   uuid: link_uuid,
+  ...link
 }: LinkDto & { setIsEditing: SetState<boolean> }) {
   const [errors, setErrors] = useState<string[]>([]);
   const errorMessage = errors.join(', ');
@@ -51,8 +51,8 @@ export function EditLinkForm({
     const data = new FormData(event.currentTarget);
     const alias = data.get('alias');
 
-    // escape hatch for empty inputs
-    if (alias === '') {
+    // escape hatch for default or empty inputs
+    if (alias === '' || alias === link.alias) {
       setIsEditing(false);
       return;
     }
@@ -65,13 +65,12 @@ export function EditLinkForm({
   };
 
   return (
-    // FIXME: don't use absolute or invisible, just replace and set a min-height on the error message
-    <div className="grid-top relative z-10">
+    <div className="grid-top">
       <form autoComplete="off" className="w-full" onSubmit={submit}>
         <div className="flex flex-nowrap items-center gap-2">
           <fieldset className="fieldset grow">
             <Input
-              defaultValue={alias}
+              defaultValue={link.alias}
               errors={errors}
               name="alias"
               onChange={() =>

@@ -1,6 +1,5 @@
 import { FaCheck as CheckmarkIcon } from 'react-icons/fa6';
 
-import { ErrorIndicator } from '@/frontend/components/ErrorIndicator';
 import { Input } from '@/frontend/components/Input';
 import { aliasPrefix, validateOptionalAlias } from '@/validators/alias';
 import { linkPrefix, validateLink } from '@/validators/link';
@@ -73,10 +72,11 @@ export function CreateLinkForm({
   return (
     <form
       autoComplete="off"
-      className="card bg-base-100 shadow-md px-6 pt-6 border border-primary-content"
+      className="card bg-base-100 shadow-md p-6 border border-primary-content"
       onSubmit={submit}
     >
       <fieldset className="fieldset">
+        {/* TODO: show explanation instead of disabled inputs when max limit is reached */}
         <Input
           disabled={disabled}
           errors={linkErrors}
@@ -99,16 +99,14 @@ export function CreateLinkForm({
         />
 
         {disabled && !loading ? (
-          <ErrorIndicator show={true}>
-            <a
-              className="btn btn-primary w-full"
-              href={import.meta.env.VITE_FRONTEND_URL}
-              rel="noreferrer"
-              target="_blank"
-            >
-              Create New Page?
-            </a>
-          </ErrorIndicator>
+          <a
+            className="btn btn-accent w-full"
+            href={import.meta.env.VITE_FRONTEND_URL}
+            rel="noreferrer"
+            target="_blank"
+          >
+            Create New Page?
+          </a>
         ) : (
           <button
             className={`btn ${success ? 'btn-success' : 'btn-primary'} w-full`}
@@ -125,8 +123,6 @@ export function CreateLinkForm({
           </button>
         )}
       </fieldset>
-
-      <p className="h-6 leading-6 text-error">{disabled ? error : null}</p>
     </form>
   );
 }

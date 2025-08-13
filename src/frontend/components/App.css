@@ -40,17 +40,28 @@ body {
   display: none;
 }
 
-.grid-alignment {
+.grid-switch {
+  display: grid;
   grid-auto-flow: column;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr min-content;
+  position: relative;
 }
 
 .grid-top {
   grid-column-start: 1;
   grid-row-start: 1;
+  position: relative;
+  z-index: 10;
+}
+.grid-top.grid-switch-off {
+  pointer-events: none;
+  visibility: hidden;
+  z-index: 0;
 }
 
 .grid-bottom {
   align-self: end;
+  grid-column-start: 1;
+  grid-row-start: 2;
 }

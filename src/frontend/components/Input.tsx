@@ -1,5 +1,3 @@
-import { ErrorIndicator } from '@/frontend/components/ErrorIndicator';
-
 export function Input({
   prefix,
   name,
@@ -35,27 +33,27 @@ export function Input({
   return (
     <>
       {label ? <span className="label">{label}:</span> : null}
-      <ErrorIndicator show={invalid}>
-        <label className="floating-label w-full">
-          {disabled ? (
-            <input
-              {...inputProps}
-              disabled={true}
-              key={`disabled-${name}`}
-              name={`disabled-${name}`}
-            />
-          ) : (
-            <input
-              {...inputProps}
-              defaultValue={defaultValue}
-              key={name}
-              name={name}
-              onChange={onChange}
-            />
-          )}
-          <span>{prefix}</span>
-        </label>
-      </ErrorIndicator>
+
+      <label className="floating-label w-full">
+        {disabled ? (
+          <input
+            {...inputProps}
+            disabled={true}
+            key={`disabled-${name}`}
+            name={`disabled-${name}`}
+          />
+        ) : (
+          <input
+            {...inputProps}
+            defaultValue={defaultValue}
+            key={name}
+            name={name}
+            onChange={onChange}
+          />
+        )}
+        <span>{prefix}</span>
+      </label>
+
       {removeHelperText ? null : (
         <p
           className="h-4 text-error font-bold text-left truncate"

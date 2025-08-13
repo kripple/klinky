@@ -18,17 +18,15 @@ export function Link(link: LinkDto) {
 
   return (
     <li
-      className={`list-row px-3 py-2 ${isEditing ? 'outline outline-primary-content shadow-md' : ''}`.trimEnd()}
+      className={`list-row px-3 py-2 ${isEditing ? 'outline outline-primary-content shadow-md' : ''}`}
       key={link.uuid}
     >
-      <div className={`list-col-grow relative grid grid-alignment`}>
+      <div className={`list-col-grow grid-switch`}>
         {isEditing ? (
           <EditLinkForm {...link} setIsEditing={setIsEditing} />
         ) : null}
 
-        <span
-          className={`grid-top relative z-0 ${isEditing ? 'invisible pointer-event-none' : ''}`}
-        >
+        <span className={`grid-top ${isEditing ? 'grid-switch-off' : ''}`}>
           <a
             className={`klinky-link link link-hover text-lg font-bold`}
             href={href}

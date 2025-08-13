@@ -48,7 +48,7 @@ export function CopyButton({
       }}
     >
       <span
-        className={`flex items-center gap-inherit ${hasCopiedText ? 'invisible' : ''}`.trimEnd()}
+        className={`flex items-center gap-inherit ${hasCopiedText ? 'invisible' : ''}`}
       >
         <CopyIcon />
         Copy
