@@ -1,24 +1,19 @@
 export function Dialog({
   children,
-  closable,
   dialogRef,
 }: {
   children: ReactNode;
-  closable?: boolean;
   dialogRef: Ref<HTMLDialogElement>;
 }) {
   return (
-    <dialog className="modal" ref={dialogRef}>
-      <div className="modal-box">
+    <dialog className="modal text-left" ref={dialogRef}>
+      <div className="modal-box flex flex-col gap-3">
         {children}
-        {closable ? (
-          <div className="modal-action">
-            <form method="dialog">
-              {/* if there is a button in form, it will close the modal */}
-              <button className="btn btn-secondary">Close</button>
-            </form>
-          </div>
-        ) : null}
+        <div className="modal-action mt-0">
+          <form method="dialog">
+            <button className="btn">Close</button>
+          </form>
+        </div>
       </div>
     </dialog>
   );

@@ -24,16 +24,19 @@ export function Features() {
         Open source
       </ExternalUrl>
 
-      {/* TODO */}
-      <Dialog closable dialogRef={ref}>
-        {`TODO: explanation that the links are related to the user_uuid (url), that there's no sign-in or sign-up, but anyone with that link will be able to edit or modify the links. It's security by obscurity, but it's not infallible, and sharing the link renders it meaningless. Provide a save-as-bookmark and/or copy-to-clipboard becuase after leaving the page, there's no way to return to it without knowing the URL. The app saves nothing by design. The ability to delete a user can live here (maybe?).`}
-      </Dialog>
       <button
         className={`btn-warning ${style}`}
         onClick={() => ref?.current?.showModal()}
       >
         No signup required
       </button>
+      <Dialog dialogRef={ref}>
+        <p className="font-sans">
+          Your klinky links are saved to a private, unique link that works like
+          a hard-to-guess password. Anyone with the link can edit, so keep it
+          safe — you’ll need it to get back here.
+        </p>
+      </Dialog>
     </div>
   );
 }
