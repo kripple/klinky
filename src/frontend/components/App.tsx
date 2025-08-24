@@ -99,7 +99,7 @@ export function App() {
             <button
               className="btn badge badge-primary aspect-square rounded-full font-bold p-3 m-0 h-auto absolute top-1 right-1 sm:top-3 sm:right-3 z-100"
               onClick={() =>
-                appRef?.current?.scrollIntoView({ behavior: 'smooth' })
+                appRef?.current?.scrollTo({ top: 0, behavior: 'smooth' })
               }
             >
               <ArrowUp />
