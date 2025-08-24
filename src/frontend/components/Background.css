@@ -27,8 +27,8 @@
     var(--bg-size-x2) var(--bg-size-x2),
     var(--bg-size-x2) var(--bg-size-x2),
     var(--bg-size) var(--bg-size);
-  height: var(--app-height);
-  margin-bottom: calc(var(--app-height) * -1);
+  height: 100vh;
+  margin-bottom: -100vh;
   width: 100vw;
   z-index: -1;
 }

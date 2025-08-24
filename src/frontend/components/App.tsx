@@ -22,6 +22,7 @@ export function App() {
 
   const linksResponse = useSortedLinks({ user_uuid: uuid });
   const links = linksResponse.currentData;
+  const hasLinks = links.length > 0;
 
   const [showLinks, setShowLinks] = useState<boolean>(false);
 
@@ -36,6 +37,7 @@ export function App() {
         {uuid ? (
           <button
             className="btn btn-secondary w-full"
+            disabled={!hasLinks}
             onClick={() =>
               deleteLinks({
                 user_uuid: uuid,
@@ -62,10 +64,11 @@ export function App() {
       </Dialog>
 
       <div
-        className="flex flex-col min-h-[200vh] lg:min-h-screen app"
+        className="flex flex-col h-[100vh] lg:h-screen app overflow-y-scroll"
         ref={appRef}
       >
         <Header
+          hasLinks={hasLinks}
           links={links}
           scrollRef={scrollRef}
           setShowLinks={setShowLinks}
@@ -88,22 +91,24 @@ export function App() {
           ) : null}
         </main>
 
-        <aside
-          className="flex lg:hidden shrink-0 items-center justify-center h-screen max-h-screen w-full p-4 sm:p-6 relative"
-          ref={scrollRef}
-        >
-          <button
-            className="btn badge badge-primary aspect-square rounded-full font-bold p-3 m-0 h-auto absolute top-1 right-1 sm:top-3 sm:right-3 z-100"
-            onClick={() =>
-              appRef?.current?.scrollIntoView({ behavior: 'smooth' })
-            }
+        {hasLinks ? (
+          <aside
+            className="flex lg:hidden shrink-0 items-center justify-center h-screen max-h-screen w-full p-4 sm:p-6 relative"
+            ref={scrollRef}
           >
-            <ArrowUp />
-          </button>
-          <section className={`w-full max-w-3xl ${linksCardStyle}`}>
-            {linksComponent}
-          </section>
-        </aside>
+            <button
+              className="btn badge badge-primary aspect-square rounded-full font-bold p-3 m-0 h-auto absolute top-1 right-1 sm:top-3 sm:right-3 z-100"
+              onClick={() =>
+                appRef?.current?.scrollIntoView({ behavior: 'smooth' })
+              }
+            >
+              <ArrowUp />
+            </button>
+            <section className={`w-full max-w-3xl ${linksCardStyle}`}>
+              {linksComponent}
+            </section>
+          </aside>
+        ) : null}
 
         {/* <Footer /> */}
       </div>

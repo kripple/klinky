@@ -8,12 +8,5 @@
   --bg-size-x2: calc(var(--bg-size) * 2);
   --header-height: var(--bg-size-x2);
   --html-bg-color: rgba(229, 229, 247, 0.2);
-  --app-height: 200vh;
   --golden-ratio: 1.618;
-}
-
-@media screen and (min-width: 1024px) {
-  :root {
-    --app-height: 100vh;
-  }
 }
