@@ -7,13 +7,14 @@ export function Dialog({
 }) {
   return (
     <dialog className="modal text-left" ref={dialogRef}>
-      <div className="modal-box flex flex-col gap-3">
+      <div className="modal-box">
         {children}
-        <div className="modal-action mt-0">
-          <form method="dialog">
-            <button className="btn">Close</button>
-          </form>
-        </div>
+
+        <form method="dialog">
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            ✕
+          </button>
+        </form>
       </div>
     </dialog>
   );

@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 
+import { CopyButton } from '@/frontend/components/CopyButton';
 import { Dialog } from '@/frontend/components/Dialog';
 import { ExternalUrl } from '@/frontend/components/ExternalUrl';
 
@@ -36,6 +37,14 @@ export function Features() {
           a hard-to-guess password. Anyone with the link can edit, so keep it
           safe — you’ll need it to get back here.
         </p>
+        <div className="modal-action mt-3">
+          <CopyButton
+            buttonStyle="btn btn-info btn-soft"
+            disabled={false}
+            label="Copy My Link"
+            text={window.location.href}
+          />
+        </div>
       </Dialog>
     </div>
   );

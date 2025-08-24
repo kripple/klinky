@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FiEdit2 as EditIcon } from 'react-icons/fi';
+import { LuCopy as CopyIcon } from 'react-icons/lu';
 import { MdOutlineDeleteOutline as DeleteIcon } from 'react-icons/md';
 
 import { api } from '@/frontend/api';
@@ -9,12 +10,12 @@ import { relativeTime } from '@/frontend/utils/time';
 import { aliasDisplayPrefix, aliasPrefix } from '@/validators/alias';
 
 export function Link(link: LinkDto) {
-  const [deleteLink, response] = api.useDeleteLinkMutation();
+  const [deleteLink] = api.useDeleteLinkMutation();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const href = aliasDisplayPrefix + link.alias;
   const buttonStyle = 'btn btn-soft btn-xs' as const;
-  const [errors, setErrors] = useState<string[]>([]);
-  const invalid = errors.length > 0;
+  // const [errors, setErrors] = useState<string[]>([]);
+  // const invalid = errors.length > 0;
 
   return (
     <li
@@ -47,6 +48,11 @@ export function Link(link: LinkDto) {
           <CopyButton
             buttonStyle={buttonStyle}
             disabled={isEditing}
+            label={
+              <>
+                <CopyIcon /> Copy
+              </>
+            }
             text={aliasPrefix + link.alias}
           />
 

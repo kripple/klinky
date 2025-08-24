@@ -1,15 +1,16 @@
 import { useCopyToClipboard } from '@uidotdev/usehooks';
 import { useEffect, useRef, useState } from 'react';
 import { FaCheck as CheckmarkIcon } from 'react-icons/fa6';
-import { LuCopy as CopyIcon } from 'react-icons/lu';
 
 export function CopyButton({
   buttonStyle,
   disabled,
+  label,
   text,
 }: {
   buttonStyle: string;
   disabled: boolean;
+  label: ReactNode;
   text: string;
 }) {
   const [clickCount, setClickCount] = useState<number>(0);
@@ -50,8 +51,7 @@ export function CopyButton({
       <span
         className={`flex items-center gap-inherit ${hasCopiedText ? 'invisible' : ''}`}
       >
-        <CopyIcon />
-        Copy
+        {label}
       </span>
       {hasCopiedText ? <CheckmarkIcon className="absolute" /> : null}
     </button>
