@@ -9,118 +9,109 @@ export const aliasDisplayPrefix = 'klinky.link/' as const;
 export const aliasPrefix = `https://${aliasDisplayPrefix}` as const;
 const regex = /^[a-zA-Z0-9_-]+$/;
 
-// home
-// dashboard
-// settings
-// profile
-// help
-// support
-// contact
-// about
-// terms
-// privacy
-// legal
-// faq
-// docs
-// api
-// error
-// notfound
-// forbidden
-// unauthorized
-// maintenance
-// config
-// setup
-// system
-// root
-// debug
-// test
-// dev
-// static
-// assets
-// cdn
-// server
-// database
-// backend
-// frontend
-// build
-// dist
-// env
-// null
-// undefined
-// true
-// false
-// yes
-// no
-// new
-// edit
-// delete
-// create
-// update
-// upload
-// download
-// search
-// default
-// public
-// class
-// document
-// window
-// documentation
-// service
-// app
-// web
-// mobile
-// desktop
-// internal
-// external
-// public
-// private
-// beta
-// preview
-// android
-// chrome
-// apple
-// website
-// webadmin
-// sysadmin
-
-// check after removing hyphens & underscores
-
 const isReserved = (alias: string) =>
   [
+    'about',
     'account',
     'accounts',
     'admin',
-    'android-chrome-192x192',
-    'android-chrome-512x512',
-    'apple-touch-icon',
-    'auth',
+    'android',
+    'androidchrome192x192',
+    'androidchrome512x512',
+    'api',
+    'app',
+    'apple',
+    'appletouchicon',
+    'assets',
+    'backend',
+    'beta',
     'blog',
     'bots',
+    'build',
     'browserconfig',
+    'cdn',
+    'class',
+    'chrome',
+    'config',
+    'contact',
     'dashboard',
-    'favicon-16x16',
-    'favicon-32x32',
+    'database',
+    'debug',
+    'default',
+    'delete',
+    'desktop',
+    'dev',
+    'dist',
+    'docs',
+    'document',
+    'documentation',
+    'download',
+    'edit',
+    'env',
+    'error',
+    'external',
+    'faq',
+    'false',
     'favicon',
+    'favicon16x16',
+    'favicon32x32',
+    'forbidden',
+    'frontend',
     'guest',
+    'help',
+    'home',
     'humans',
+    'internal',
+    'legal',
     'link',
     'links',
     'login',
     'logoff',
     'logout',
+    'maintenance',
     'manifest',
+    'mobile',
+    'new',
+    'no',
+    'notfound',
+    'null',
+    'preview',
+    'private',
+    'profile',
+    'public',
     'register',
     'robots',
-    'service-worker',
+    'root',
+    'search',
+    'server',
+    'service',
+    'serviceworker',
+    'settings',
+    'setup',
     'signin',
     'signout',
     'signup',
     'site',
+    'static',
+    'support',
     'sw',
+    'sysadmin',
+    'system',
     'test',
+    'terms',
+    'true',
+    'unauthorized',
+    'undefined',
+    'update',
+    'upload',
     'user',
     'users',
+    'web',
+    'webadmin',
     'webmanifest',
+    'website',
+    'window',
+    'yes',
   ].includes(alias.toLowerCase());
 
 // Refinement functions should never throw. Instead they should return a falsy value to signal failure. Thrown errors are not caught by Zod.
