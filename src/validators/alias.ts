@@ -165,7 +165,6 @@ export const validateAlias = (alias?: unknown) => {
   }
 };
 
-// FIXME: don't allow underscores or dashes in the default aliases
 export const validateOptionalAlias = (alias?: unknown) => {
   return typeof alias !== 'string' || alias === ''
     ? validateAlias(generate())

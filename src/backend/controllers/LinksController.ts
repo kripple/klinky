@@ -65,7 +65,6 @@ class LinksController extends UserLinksController {
     this.validate_uuid('user', user_uuid);
     this.validate_url(value);
 
-    // FIXME: don't allow underscores or dashes in the default aliases
     const optionalAlias = validateOptionalAlias(optionalParams.alias);
     const alias = optionalAlias.success ? optionalAlias.data : generate();
     const user = await this.get_user_or_404(user_uuid);
