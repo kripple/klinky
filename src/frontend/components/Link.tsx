@@ -12,8 +12,8 @@ import { aliasDisplayPrefix, aliasPrefix } from '@/validators/alias';
 export function Link(link: LinkDto) {
   const [deleteLink] = api.useDeleteLinkMutation();
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const href = aliasDisplayPrefix + link.alias;
   const buttonStyle = 'btn btn-soft btn-xs' as const;
+  const href = aliasPrefix + link.alias;
   // const [errors, setErrors] = useState<string[]>([]);
   // const invalid = errors.length > 0;
 
@@ -34,7 +34,7 @@ export function Link(link: LinkDto) {
             rel="noreferrer"
             target="_blank"
           >
-            {href}
+            {aliasDisplayPrefix + link.alias}
           </a>
 
           <p className={`text-xs text-accent`}>{link.value}</p>
@@ -53,7 +53,7 @@ export function Link(link: LinkDto) {
                 <CopyIcon /> Copy
               </>
             }
-            text={aliasPrefix + link.alias}
+            text={href}
           />
 
           <button
