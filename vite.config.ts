@@ -14,7 +14,7 @@ enableVisualizer && plugins.push(visualizer({ open: false }));
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/klinky/',
+  base: '/',
   build: {
     chunkSizeWarningLimit: 200,
     copyPublicDir: true,

@@ -9,7 +9,7 @@ import 'urlpattern-polyfill';
 
 const getPathUuid = () => {
   const pattern = new URLPattern({
-    pathname: '/klinky/links/:user_uuid',
+    pathname: '/links/:user_uuid',
   });
   const result = pattern.exec(window.location.href);
   const user_uuid = result?.pathname.groups?.user_uuid;
@@ -45,7 +45,7 @@ export const useCurrentUser = () => {
     // This parameter exists for historical reasons, and cannot be omitted; passing the empty string is traditional, and safe against future changes to the method.
     const unused = '' as const;
 
-    history.replaceState(history.state, unused, `/klinky/links/${currentUserUuid}`);
+    history.replaceState(history.state, unused, `/links/${currentUserUuid}`);
 
     setPathUuid((current) => {
       if (current === currentUserUuid) return current;

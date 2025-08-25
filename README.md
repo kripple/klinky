@@ -35,6 +35,5 @@ To disable this, edit `node_modules/netlify-cli/dist/utils/proxy.js` around line
 
 ## Future Plans
 
-- Use custom domain `klinky.link`.
 - Detect & rate-limit brute-force attempts.
 - Add CSP to prevent third-party script execution.
