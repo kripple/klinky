@@ -32,18 +32,10 @@ function renderApp() {
     try {
       const response = await fetch(
         `${import.meta.env.VITE_BACKEND_URL}${alias}`,
-        {
-          redirect: 'manual',
-        },
       );
-
-      if (response.status === 302) {
-        const location = response.headers.get('Location');
-        if (location) {
-          window.location.href = location;
-        } else {
-          renderApp();
-        }
+      const data = await response.json();
+      if (data?.url) {
+        window.location.href = data.url;
       } else {
         renderApp();
       }

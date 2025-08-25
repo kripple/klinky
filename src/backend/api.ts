@@ -37,7 +37,7 @@ export async function createApi({
   api.get('/:alias', async (c) => {
     const params = c.req.param();
     const url = await linksController.unshorten({ ...params, db });
-    return c.redirect(url || '/');
+    return c.json({ url });
   });
 
   api.onError((error, c) => {
