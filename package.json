@@ -13,6 +13,7 @@
     "build": "npm run build:app && npm run build:api",
     "build:api": "rm -rf netlify && tsc -p tsconfig.backend.json && vite build --config vite.backend-config.ts",
     "build:app": "tsc -p tsconfig.frontend.json && vite build",
+    "postbuild:app": "cp docs/index.html docs/404.html",
     "deploy:api": "netlify deploy --prod",
     "deploy:db": "drizzle-kit migrate --config config/drizzle.config.ts",
     "deploy:dev:db": "dotenvx run -f .env.development -- npm run deploy:db",
