@@ -139,6 +139,9 @@ const Alias = z
   })
   .refine((alias) => !alias.startsWith('assets'), {
     error: `Custom links can't start with 'assets'.`,
+  })
+  .refine((alias) => !alias.startsWith('links'), {
+    error: `Custom links can't start with 'links'.`,
   });
 
 type Alias = z.infer<typeof Alias>;
