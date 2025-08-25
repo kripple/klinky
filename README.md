@@ -1,4 +1,4 @@
-# klinky.link Link Shortener
+# klinky.link
 
 **klinky.link** is a link shortener that does not require a sign-up and specifically does not perform analytics of any kind.
 
