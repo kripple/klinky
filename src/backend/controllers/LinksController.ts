@@ -40,17 +40,29 @@ class LinksController extends UserLinksController {
     return true;
   }
 
-  index = async ({ user_uuid }: UserParams) => {
+  index = async ({
+    db,
+    user_uuid,
+  }: UserParams & {
+    db: AppDatabase;
+  }) => {
     this.validate_uuid('user', user_uuid);
-    const user = await this.get_user_or_404(user_uuid);
-    return getLinks(user.id);
+    const user = await this.get_user_or_404({ db, user_uuid });
+    return getLinks({ db, userId: user.id });
   };
 
-  show = async ({ user_uuid, link_uuid }: UserParams & LinkParams) => {
+  show = async ({
+    db,
+    user_uuid,
+    link_uuid,
+  }: UserParams &
+    LinkParams & {
+      db: AppDatabase;
+    }) => {
     this.validate_uuid('user', user_uuid);
     this.validate_uuid('link', link_uuid);
-    const user = await this.get_user_or_404(user_uuid);
-    const link = await getLinkById({ userId: user.id, link_uuid });
+    const user = await this.get_user_or_404({ db, user_uuid });
+    const link = await getLinkById({ db, userId: user.id, link_uuid });
     if (!link) {
       throw new HTTPException(404, { cause: 'missing link' });
     }
@@ -58,17 +70,20 @@ class LinksController extends UserLinksController {
   };
 
   create = async ({
+    db,
     user_uuid,
     value,
     ...optionalParams
-  }: CreateLinkParams) => {
+  }: CreateLinkParams & {
+    db: AppDatabase;
+  }) => {
     this.validate_uuid('user', user_uuid);
     this.validate_url(value);
 
     const optionalAlias = validateOptionalAlias(optionalParams.alias);
     const alias = optionalAlias.success ? optionalAlias.data : generate();
-    const user = await this.get_user_or_404(user_uuid);
-    const links = await getLinks(user.id);
+    const user = await this.get_user_or_404({ db, user_uuid });
+    const links = await getLinks({ db, userId: user.id });
 
     if (links.length === maxLinksPerUser) {
       throw new HTTPException(403, {
@@ -76,41 +91,57 @@ class LinksController extends UserLinksController {
       });
     }
 
-    return createLink({ user_id: user.id, value, alias });
+    return createLink({ db, user_id: user.id, value, alias });
   };
 
   update = async ({
+    db,
     user_uuid,
     link_uuid,
     alias,
-  }: UserParams & UpdateLinkParams) => {
+  }: UserParams &
+    UpdateLinkParams & {
+      db: AppDatabase;
+    }) => {
     this.validate_uuid('user', user_uuid);
     this.validate_uuid('link', link_uuid);
     this.validate_alias(alias);
-    const user = await this.get_user_or_404(user_uuid);
-    const link = await updateLink({ userId: user.id, link_uuid, alias });
+    const user = await this.get_user_or_404({ db, user_uuid });
+    const link = await updateLink({ db, userId: user.id, link_uuid, alias });
     if (!link) {
       throw new HTTPException(404, { cause: 'missing link' });
     }
     return link;
   };
 
-  destroy = async ({ user_uuid, link_uuid }: UserParams & LinkParams) => {
+  destroy = async ({
+    db,
+    user_uuid,
+    link_uuid,
+  }: UserParams &
+    LinkParams & {
+      db: AppDatabase;
+    }) => {
     this.validate_uuid('user', user_uuid);
     this.validate_uuid('link', link_uuid);
-    const user = await this.get_user_or_404(user_uuid);
-    await deleteLink({ userId: user.id, link_uuid });
+    const user = await this.get_user_or_404({ db, user_uuid });
+    await deleteLink({ db, userId: user.id, link_uuid });
   };
 
-  destroy_all = async ({ user_uuid }: UserParams) => {
+  destroy_all = async ({
+    db,
+    user_uuid,
+  }: UserParams & {
+    db: AppDatabase;
+  }) => {
     this.validate_uuid('user', user_uuid);
-    const user = await this.get_user_or_404(user_uuid);
-    await deleteLinks({ userId: user.id });
+    const user = await this.get_user_or_404({ db, user_uuid });
+    await deleteLinks({ db, userId: user.id });
   };
 
-  unshorten = async ({ alias }: { alias: string }) => {
+  unshorten = async ({ db, alias }: { alias: string; db: AppDatabase }) => {
     this.validate_alias(alias);
-    const link = await getLinkByAlias(alias);
+    const link = await getLinkByAlias({ db, alias });
     return link?.value;
   };
 }

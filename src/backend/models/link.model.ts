@@ -1,10 +1,15 @@
 import { and, eq, sql } from 'drizzle-orm';
 
-import { db } from '@/backend/database/db';
 import { Link, NewLink } from '@/backend/database/schema/Link';
 import { maxLinksPerUser } from '@/validators/link';
 
-export const getLinks = async (userId: number) => {
+export const getLinks = async ({
+  db,
+  userId,
+}: {
+  db: AppDatabase;
+  userId: number;
+}) => {
   return db
     .select()
     .from(Link)
@@ -13,9 +18,11 @@ export const getLinks = async (userId: number) => {
 };
 
 export const getLinkById = async ({
+  db,
   userId,
   link_uuid,
 }: {
+  db: AppDatabase;
   userId: number;
   link_uuid: string;
 }) => {
@@ -28,7 +35,13 @@ export const getLinkById = async ({
   return link;
 };
 
-export const getLinkByAlias = async (alias: string) => {
+export const getLinkByAlias = async ({
+  alias,
+  db,
+}: {
+  alias: string;
+  db: AppDatabase;
+}) => {
   const link = (
     await db.select().from(Link).where(eq(Link.alias, alias))
   ).shift();
@@ -36,10 +49,11 @@ export const getLinkByAlias = async (alias: string) => {
 };
 
 export const createLink = async ({
+  db,
   user_id,
   alias,
   value,
-}: Pick<NewLink, 'alias' | 'user_id' | 'value'>) => {
+}: Pick<NewLink, 'alias' | 'user_id' | 'value'> & { db: AppDatabase }) => {
   const [link] = await db
     .insert(Link)
     .values({
@@ -52,10 +66,12 @@ export const createLink = async ({
 };
 
 export const updateLink = async ({
+  db,
   userId,
   link_uuid,
   alias,
 }: {
+  db: AppDatabase;
   userId: number;
   link_uuid: string;
   alias: string;
@@ -69,9 +85,11 @@ export const updateLink = async ({
 };
 
 export const deleteLink = async ({
+  db,
   userId,
   link_uuid,
 }: {
+  db: AppDatabase;
   userId: number;
   link_uuid: string;
 }) => {
@@ -80,6 +98,12 @@ export const deleteLink = async ({
     .where(and(eq(Link.user_id, userId), eq(Link.uuid, link_uuid)));
 };
 
-export const deleteLinks = async ({ userId }: { userId: number }) => {
+export const deleteLinks = async ({
+  db,
+  userId,
+}: {
+  db: AppDatabase;
+  userId: number;
+}) => {
   await db.delete(Link).where(eq(Link.user_id, userId));
 };
