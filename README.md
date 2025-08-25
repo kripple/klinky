@@ -1,47 +1,40 @@
-# Klinky Link URL Shortener
+# klinky.link Link Shortener
 
-- https://github.com/chingu-voyages/Handbook/blob/main/docs/guides/soloproject/soloproject.md
-- https://github.com/chingu-voyages/Handbook/blob/main/docs/guides/soloproject/topics/tier_developer.md
-- https://medium.com/chingu/keys-to-a-well-written-readme-55c53d34fe6d
+**klinky.link** is a link shortener that does not require a sign-up and specifically does not perform analytics of any kind.
 
-Your Solo Project must meet these criteria:
+Built as a [Tier 3 Chingu Solo Project](https://github.com/chingu-voyages/Handbook/blob/main/docs/guides/soloproject/soloproject.md).
 
-Must include distinct files which separate the FE and BE application logic in a way the follows the Single Responsibility Principle (SRP).
+**Live app:** [https://kripple.github.io/klinky/](https://kripple.github.io/klinky/)
 
-If the app accesses a database it must be accessed only from the BE logic. Applications that access databases from FE logic will not be accepted.
+## Features
 
-The BE logic must implement an app-specific API that is only implemented in the BE. The FE must access the BE API to deliver services to the end user.
+- Simple URL shortener with create, read, update, and delete functionality
+- No account required — links are saved to private, unique URLs
+- React frontend deployed with GitHub Pages
+- Backend API built with Hono, deployed as a Netlify Edge Function
+- PostgreSQL database hosted with Neon
 
-Applications that use technology like Firebase only for authentication are not acceptable. Apps which couple this form of authentication with application specific API are acceptable.
+## Development
 
-The FE logic must include logic developed by the Chingu that operates on the data to transform it, change it, or present it to the end user
+- Assumes familiarity with development using node & npm.
+- Requires a `.env.development` file with the following:
 
-It must implement a front-end application that accesses a back-end server that implements an API of your own design, optionally using a database such as a NoSQL DBMS like MongoDB or a SQL DBMS like PostgreSQL.
+```
+DATABASE_URL=<neon-postgres-connection-string>
+VITE_BACKEND_URL=http://localhost:8888
+VITE_FRONTEND_URL=http://localhost:5173
+```
 
-Your backend must include CRUD (if using a database) or POST/READ/UPDATE/DELETE (for APIs).
+Install dependencies with `npm install`. Use npm scripts for building, running, testing, etc.
 
-## Routes
+#### Developer Notes
 
-POST   /users
-GET    /users/:uuid
-DELETE /users/:uuid
+When testing 404 cases locally, Netlify may fallback to static files.
+To disable this, edit `node_modules/netlify-cli/dist/utils/proxy.js` around line 167 and return an empty array from `alternativePathsFor`.
+(Note: this change will be overwritten when dependencies update.)
 
-GET    /users/:uuid/links
-POST   /users/:uuid/links
-GET    /users/:uuid/links/:link_id
-PATCH  /users/:uuid/links/:link_id
-DELETE /users/:uuid/links/:link_id
+## Future Plans
 
-GET    /:alias
-
-## TODO
-
-- How should we handle file URLs?
-- Rate limit / throttle / block (by IP?) on multiple requests containing different invalid user ids (like, more than one per second). Protect against users trying to brute-force the auth.
-- add CSP to prevent third-party script execution
-
-#### netlify-cli alternativePathsFor
-
-node_modules/netlify-cli/dist/utils/proxy.js line 167
-
-return empty array
+- Use custom domain `klinky.link`.
+- Detect & rate-limit brute-force attempts.
+- Add CSP to prevent third-party script execution.
