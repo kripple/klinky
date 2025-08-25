@@ -1,0 +1,1 @@
+import{j as i}from"./index-BWWSQTeM.js";import{A as o,a as p}from"./api-CkXB7W_A.js";import"./index-D0tyxXNs.js";import"./index-TjqCB-xA.js";function e({children:r}){return i.jsx(o,{api:p,children:r})}export{e as ApiProvider};

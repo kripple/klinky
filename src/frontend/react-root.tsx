@@ -23,14 +23,30 @@ function renderApp() {
   });
 }
 
-(function () {
-  const pathname = window.location.pathname;
+(async function () {
+  const alias = window.location.pathname;
 
-  if (pathname === '/' || pathname.startsWith('/links')) {
+  if (alias === '/' || alias.startsWith('/links')) {
     renderApp();
   } else {
     try {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}${window.location.pathname}`);
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}${alias}`,
+        {
+          redirect: 'manual',
+        },
+      );
+
+      if (response.status === 302) {
+        const location = response.headers.get('Location');
+        if (location) {
+          window.location.href = location;
+        } else {
+          renderApp();
+        }
+      } else {
+        renderApp();
+      }
     } catch {
       renderApp();
     }
